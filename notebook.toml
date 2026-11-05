@@ -1,0 +1,66 @@
+# Notebook configuration. Order of chapters and files here is the
+# order in the PDF (the packer may swap nearby snippets inside a
+# chapter to avoid gaps; set layout.window = 1 to forbid that).
+
+title = "RCPC 2026"
+team = "Team Name"
+members = ["Member One", "Member Two", "Member Three"]
+university = "University"
+
+[layout]
+code_size = 7.0       # pt, monospace code
+text_size = 7.0       # pt, descriptions
+title_size = 8.0      # pt, snippet titles
+margin_x = 7.0        # mm
+margin_top = 11.0     # mm (the running header sits in here)
+margin_bottom = 6.0   # mm
+gutter = 4.5          # mm between columns
+gap = 9.0             # pt between snippets
+window = 6            # how many upcoming snippets the packer may pick from
+max_cols = 60         # build.py warns about code lines wider than this
+
+[[chapter]]
+name = "Contest"
+dir = "contest"
+files = ["template.cpp", "hash.sh", "stress.sh", "speedup.cpp", "troubleshoot.typ"]
+
+[[chapter]]
+name = "Mathematics"
+dir = "math"
+files = ["formulas.typ", "theorems.typ", "numbers.typ"]
+
+[[chapter]]
+name = "Number theory and algebra"
+dir = "number-theory"
+files = ["modint.h", "crt.h", "sieve.h", "millerrabin.h", "pollard.h", "dlog.h",
+         "ntt.h", "fft.h", "berlekamp.h", "gauss.h", "xorbasis.h", "floorsum.h"]
+
+[[chapter]]
+name = "Data structures"
+dir = "data-structures"
+files = ["dsu.h", "rollback.h", "fenwick.h", "segtree.h", "lazy.h", "pst.h",
+         "treap.h", "sparsetable.h", "lichao.h", "pbds.h", "mo.h"]
+
+[[chapter]]
+name = "Graphs"
+dir = "graph"
+files = ["dinic.h", "mcmf.h", "hopcroft.h", "hungarian.h", "blossom.h", "scc.h",
+         "twosat.h", "lowlink.h", "euler.h", "lca.h", "hld.h", "virtualtree.h",
+         "centroid.h"]
+
+[[chapter]]
+name = "Strings"
+dir = "strings"
+files = ["kmp.h", "zfunc.h", "manacher.h", "hashing.h", "suffixarray.h", "sam.h",
+         "aho.h", "eertree.h", "lyndon.h"]
+
+[[chapter]]
+name = "Geometry"
+dir = "geometry"
+files = ["point.h", "lines.h", "polygon.h", "hull.h", "closest.h", "halfplane.h",
+         "circles.h", "minkowski.h"]
+
+[[chapter]]
+name = "Dynamic programming"
+dir = "dp"
+files = ["dcopt.h", "knuth.h", "sos.h", "lis.h", "slope.h"]
