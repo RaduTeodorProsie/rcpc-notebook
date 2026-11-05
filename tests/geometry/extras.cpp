@@ -83,7 +83,7 @@ int main() {
     rep(i, 0, N) circ.push_back(c + Pd{cos(2 * M_PI * i / N), sin(2 * M_PI * i / N)} * r);
     for (int i = 0; i < sz(poly) && sz(circ); ++i) circ = polyCut(circ, poly[i], poly[(i + 1) % sz(poly)]);
     double want = sz(circ) ? area2(circ) / 2 : 0, got = polyCircle(poly, c, r);
-    CHECK(fabs(got - want) < 1e-3 * max(1.0, r * r));
+    CHECK(fabs(got - want) < 2e-5 * max(1.0, r * r), "got %f want %f", got, want);
     reverse(all(poly));
     CHECK(fabs(polyCircle(poly, c, r) + got) < 1e-9 * max(1.0, r * r));
   }

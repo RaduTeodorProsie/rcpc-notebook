@@ -28,14 +28,25 @@ int main() {
     auto [fl, co] = f.flow(S, T);
     CHECK(fl == n && co == best);
   }
-  rep(it, 0, 300) {  // min-cost flow with a flow limit, vs brute over flows
-    int n = rnd(2, 4), m = rnd(1, 5);
+  // Min-cost flow with a flow limit, vs brute force over all integer flows.
+  // Second half: negative costs on a DAG whose edges point to smaller
+  // indices (source n-1, sink 0), so Bellman-Ford needs several rounds.
+  rep(it, 0, 600) {
+    bool neg = it >= 300;
+    int n = rnd(2, neg ? 5 : 4), m = rnd(1, neg ? 6 : 5);
+    int s = neg ? n - 1 : 0, t = neg ? 0 : n - 1;
     vector<array<ll, 4>> es;
-    rep(i, 0, m) es.push_back({rnd(0, n - 1), rnd(0, n - 1), rnd(0, 2), rnd(0, 6)});
+    rep(i, 0, m) {
+      ll a = rnd(0, n - 1), b = rnd(0, n - 1);
+      if (neg && a == b) continue;
+      if (neg && a < b) swap(a, b);
+      es.push_back({a, b, rnd(0, 2), neg ? rnd(-6, 6) : rnd(0, 6)});
+    }
+    m = sz(es);
     ll lim = rnd(0, 3);
     MCMF f(n);
     for (auto [a, b, cap, cost] : es) f.addEdge(a, b, cap, cost);
-    auto [fl, co] = f.flow(0, n - 1, lim);
+    auto [fl, co] = f.flow(s, t, lim);
     ll bestF = -1, bestC = 0;
     vector<ll> x(m);
     function<void(int)> go = [&](int i) {
@@ -43,9 +54,9 @@ int main() {
         vector<ll> bal(n);
         ll c = 0;
         rep(j, 0, m) bal[es[j][0]] -= x[j], bal[es[j][1]] += x[j], c += x[j] * es[j][3];
-        rep(v, 1, n - 1) if (bal[v]) return;
-        ll fv = bal[n - 1];
-        if (fv < 0 || fv > lim) return;
+        rep(v, 0, n) if (v != s && v != t && bal[v]) return;
+        ll fv = bal[t];
+        if (fv < 0 || fv > lim || bal[s] != -fv) return;
         if (fv > bestF || (fv == bestF && c < bestC)) bestF = fv, bestC = c;
         return;
       }

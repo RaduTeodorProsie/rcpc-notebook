@@ -1,13 +1,16 @@
 /**
  * Name: Li Chao tree
- * Description: Insert lines $k x + m$, query the maximum at an
- *   integer $x in [l o, h i)$. For the minimum: insert
- *   `Line{-k, -m}` instead and negate the answer, since
- *   $min(k x + m) = -max(-k x - m)$.
- *   Memory is $O(C)$ for the domain size $C = h i - l o$; for a
- *   large domain use the line container (`cht.h`) instead, or
- *   compress the query points.
- * Time: $O(log C)$ per operation
+ * Description: Lines $k x + m$ on the integer domain $[l o, h i)$;
+ *   `query(x)` is the maximum at $x$ (`LLONG_MIN / 2` if no line
+ *   covers $x$). `add` inserts a line everywhere, `addSeg` only on
+ *   $[a, b)$. Minimum: insert `Line{-k, -m}` and negate the answer.
+ *   Each node keeps the line that wins at its midpoint; the loser
+ *   can still win on one side only, so it moves down that side.
+ *   Hence it works unchanged for any functions of which two cross
+ *   at most once (edit `Line`), e.g. $a(x - b)^2 + c$ with one $a$.
+ *   Memory $O(C)$ for $C = h i - l o$: for a huge domain, compress
+ *   the query points or use the line container (`cht.h`).
+ * Time: $O(log C)$, `addSeg` $O(log^2 C)$
  */
 #pragma once
 struct Line {
@@ -19,6 +22,14 @@ struct LiChao {
   LiChao(int lo, int hi) : lo(lo), hi(hi),
       t(4 * (hi - lo), Line{0, LLONG_MIN / 2}) {}
   void add(Line ln) { add(ln, 1, lo, hi); }
+  void addSeg(Line ln, int a, int b) { seg(ln, a, b, 1, lo, hi); }
+  void seg(Line ln, int a, int b, int x, int l, int r) {
+    if (b <= l || r <= a) return;
+    if (a <= l && r <= b) return add(ln, x, l, r);
+    int m = l + (r - l) / 2;
+    seg(ln, a, b, 2 * x, l, m);
+    seg(ln, a, b, 2 * x + 1, m, r);
+  }
   void add(Line ln, int x, int l, int r) {
     int m = l + (r - l) / 2;
     bool lef = ln(l) > t[x](l), mid = ln(m) > t[x](m);

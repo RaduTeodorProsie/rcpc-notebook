@@ -20,7 +20,7 @@ struct MCMF {
     g[b].push_back({a, sz(g[a]) - 1, 0, -cost});
   }
   pair<ll, ll> flow(int s, int t, ll lim = LLONG_MAX) {
-    vector<ll> h(n); // potentials, as if from a virtual source
+    vector<ll> h(n); // potentials, from a virtual source
     rep(it, 0, n) {
       bool ch = false;
       rep(v, 0, n) for (E& e : g[v])
