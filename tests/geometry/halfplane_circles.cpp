@@ -1,22 +1,9 @@
+#include "geometry/polycut.h"
+#include "geometry/polygon.h"
 #include "geometry/halfplane.h"
 #include "geometry/circles.h"
 #include "testlib.h"
-// Clip a convex polygon by the left side of p->q.
-vector<Pd> clip(const vector<Pd>& poly, Pd p, Pd q) {
-  vector<Pd> r;
-  rep(i, 0, sz(poly)) {
-    Pd a = poly[i], b = poly[(i + 1) % sz(poly)];
-    double sa = (q - p).cross(a - p), sb = (q - p).cross(b - p);
-    if (sa >= 0) r.push_back(a);
-    if ((sa >= 0) != (sb >= 0)) r.push_back(a + (b - a) * (sa / (sa - sb)));
-  }
-  return r;
-}
-double area(const vector<Pd>& v) {
-  double a = 0;
-  rep(i, 0, sz(v)) a += v[i].cross(v[(i + 1) % sz(v)]);
-  return a / 2;
-}
+double area(const vector<Pd>& v) { return v.empty() ? 0 : area2(v) / 2; }
 int main() {
   rep(it, 0, 3000) {
     const double B = 100;
@@ -29,7 +16,7 @@ int main() {
       Pd p{rndd(-10, 10), rndd(-10, 10)}, q{rndd(-10, 10), rndd(-10, 10)};
       if ((q - p).len() < 1e-3) continue;
       hs.push_back(HP(p, q));
-      poly = clip(poly, p, q);
+      poly = polyCut(poly, p, q);
     }
     double want = poly.empty() ? 0 : area(poly);
     auto got = halfPlanes(hs);

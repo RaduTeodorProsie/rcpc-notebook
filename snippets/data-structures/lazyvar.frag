@@ -15,6 +15,12 @@ void apply(T& a, U f) {
 }
 U comp(U f, U g) { return f != none ? f : g; }
 // == x -> b x + c (mod P); sum ==
+// Each element x becomes b x + c, so a sum of len elements
+// becomes b sum + c len. comp(f, g) is f after g:
+// bf (bg x + cg) + cf = (bf bg) x + (bf cg + cf).
+// Assign v is
+// (0, v), add v is (1, v), multiply by v is (v, 0); none is
+// (1, 0), the map x -> x.
 static constexpr ll P = 998244353;
 struct T { ll sum = 0; int len = 0; };
 using U = pair<ll, ll>; // (b, c)

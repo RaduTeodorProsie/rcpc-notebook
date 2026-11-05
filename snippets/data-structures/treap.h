@@ -6,12 +6,15 @@
  * Time: $O(log n)$ expected
  */
 #pragma once
+mt19937 prng(chrono::steady_clock::now()
+                  .time_since_epoch().count());
 struct Node {
   Node *l = 0, *r = 0;
-  int pri, size = 1;
+  unsigned pri;
+  int size = 1;
   ll val, sum; //!
   bool rev = false; //!
-  Node(ll v) : pri(rand()), val(v), sum(v) {}
+  Node(ll v) : pri(prng()), val(v), sum(v) {}
 };
 int size(Node* t) { return t ? t->size : 0; }
 ll sum(Node* t) { return t ? t->sum : 0; }

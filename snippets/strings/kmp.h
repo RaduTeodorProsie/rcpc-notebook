@@ -1,8 +1,11 @@
 /**
  * Name: Prefix function
- * Description: `pi[i]` is the longest proper border of
- *   $s[0..i]$. `match` returns all start positions of `pat` in
- *   $s$.
+ * Description: `pi[i]` is the largest $k <= i$ such that the first
+ *   $k$ characters of $s$ equal the $k$ characters ending at
+ *   position $i$: $s[0..k) = s[i-k+1..i]$. E.g. `aabaa` gives
+ *   $0, 1, 0, 1, 2$. `match` returns all start positions of `pat`
+ *   in $s$: in `pat + '\0' + s`, a value $|"pat"|$ marks the end of
+ *   an occurrence (the `\0` stops borders from crossing over).
  * Time: $O(n + m)$
  */
 #pragma once

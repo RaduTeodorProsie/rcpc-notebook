@@ -56,8 +56,10 @@ is compiled once per `// == name ==` block of the fragment, with the base
 snippet's marked (`//!`) block replaced by that block; the test sees
 `VARIANT` (0, 1, ...) and includes `VARIANT_FILE`.
 
-Stress testing during the contest: `snippets/contest/` has `gen.py`
-(`python3 gen.py SEED KIND key=value`) and `stress.sh`.
+Stress testing during the contest: `snippets/contest/` has one
+generator per input model (`gen_array.py`, `gen_queries.py`, `gen_string.py`,
+`gen_tree.py`, `gen_graph.py`; `python3 gen_X.py SEED [maxima...]`) and
+`stress.sh` (`./stress.sh "gen_tree.py 6" 1000`).
 
 ## Layout
 

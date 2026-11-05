@@ -4,6 +4,9 @@
  *   integer $x in [l o, h i)$. For the minimum: insert
  *   `Line{-k, -m}` instead and negate the answer, since
  *   $min(k x + m) = -max(-k x - m)$.
+ *   Memory is $O(C)$ for the domain size $C = h i - l o$; for a
+ *   large domain use the line container (`cht.h`) instead, or
+ *   compress the query points.
  * Time: $O(log C)$ per operation
  */
 #pragma once

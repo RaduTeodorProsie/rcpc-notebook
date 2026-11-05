@@ -2,7 +2,8 @@
  * Name: Policy-based structures
  * Description: Ordered set: `find_by_order(k)` is the $k$-th
  *   element (0-based), `order_of_key(x)` counts elements $< x$.
- *   Use `less_equal` or pairs for a multiset. `gp_hash_table` is
+ *   Multiset: store pairs (value, unique id); `less_equal`
+ *   breaks `erase` and `find`. `gp_hash_table` is
  *   a fast hash map; the custom hash resists anti-hash tests.
  * Time: $O(log n)$; hash map $O(1)$ expected
  */

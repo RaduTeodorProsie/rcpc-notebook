@@ -1,9 +1,14 @@
 /**
  * Name: Virtual tree
- * Description: The tree on the given vertices and their pairwise
- *   LCAs, as (vertex, parent) pairs in DFS order; the first one
- *   is the root, with parent $-1$. Fewer than $2k$ vertices; run
- *   the DP on it instead of the whole tree.
+ * Description: Compresses the tree to the vertices in `vs` plus
+ *   the LCAs of their pairs (fewer than $2k$ vertices): the parent
+ *   of each is its nearest proper ancestor among them. Returns
+ *   `(v, parent)` pairs, no duplicates, sorted by `tin`. The first
+ *   pair is the root, with parent $-1$, and every parent comes
+ *   before its children: loop backwards for a bottom-up DP. The
+ *   compressed edge stands for a path of `dep[v] - dep[parent]`
+ *   original edges.
+ * Usage: for (auto [v, p] : virtualTree(t, vs)) ...
  * Time: $O(k log n)$
  */
 #pragma once

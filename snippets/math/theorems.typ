@@ -1,6 +1,6 @@
 // Name: Theorems in words
 #set par(justify: true, spacing: 4.2pt)
-#let t(name, body) = [#text(font: sys.inputs.at("sans", default: "Helvetica Neue"), weight: "bold", size: 6.5pt, name) #h(2pt) #body]
+#import "/snippets/sheet.typ": t
 #t[Burnside][The number of objects up to symmetry is the _average number of
 objects left unchanged_ by a symmetry: $1/(|G|) sum_g "fix"(g)$. Colourings
 with $k$ colours: $"fix"(g) = k^("cycles of" g)$. Necklaces of length $n$
@@ -28,10 +28,20 @@ share vertices. Dually (Mirsky): longest chain $=$ fewest antichains.]
 Laplacian $L = D - A$ with any one row and column removed. Directed,
 rooted at $r$ (edges away from $r$): use in-degrees, remove row and column $r$.]
 
-#t[LGV][In a DAG with sources $a_i$ and sinks $b_i$, $det(M)$ with
-$M_(i j) = $ number of paths $a_i -> b_j$ counts tuples of vertex-disjoint
-paths, signed by the permutation they realise. If only $a_i -> b_i$ can be
-disjoint (e.g. planar, ordered endpoints), it is the exact count.]
+#t[LGV][Counts families of paths that do not touch. Take a DAG with
+sources $a_1, dots, a_k$ and sinks $b_1, dots, b_k$, and let
+$M_(i j)$ be the number of paths $a_i -> b_j$ (or the sum over those
+paths of the product of edge weights). Then $det M$ equals the sum, over
+all families of $k$ pairwise vertex-disjoint paths $a_i -> b_(sigma(i))$, of
+$"sign"(sigma)$. Reason: in a family where two paths share a vertex, swap
+their tails after the first shared vertex; this pairs such families with
+opposite signs, so they cancel. Use: when the geometry forces
+$sigma = "id"$, $det M$ is exactly the number of disjoint families. This holds
+on a grid when sources and sinks lie on the border in the same order.
+For example, for $k = 2$ the count is $M_(1 1) M_(2 2) - M_(1 2) M_(2 1)$; on a grid
+$M_(i j) = binom(Delta x + Delta y, Delta x)$. Two paths $(0,0) -> (n,m)$
+that meet only at the ends: sources $(0,1), (1,0)$, sinks
+$(n-1,m), (n,m-1)$. Compute $det$ modulo a prime with `det`.]
 
 #t[Sprague–Grundy][A position's Grundy value is the mex of the values of
 the positions reachable in one move. A sum of independent games is lost

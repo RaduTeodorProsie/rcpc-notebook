@@ -1,6 +1,6 @@
 /**
  * Name: Centroid decomposition
- * Description: Calls `solve(c)` for every centroid, top-down.
+ * Description: `go(solve)` calls `solve(c)` for every centroid, top-down.
  *   Inside, vertices with `removed` set belong to earlier levels,
  *   so a DFS from `c` that avoids them sees exactly the current
  *   component. `cpar` is the centroid tree.
@@ -26,11 +26,11 @@ struct Centroid {
     return v;
   }
   template <class F>
-  void build(F solve, int v = 0, int p = -1) {
+  void go(F solve, int v = 0, int p = -1) {
     int c = find(v, -1, calc(v, -1));
     cpar[c] = p, solve(c), removed[c] = true;
     for (int u : g[c])
-      if (!removed[u]) build(solve, u, c);
+      if (!removed[u]) go(solve, u, c);
   }
 };
 // --- uses ---
@@ -53,7 +53,7 @@ ll pathsUpTo(const vector<vi>& g, int K) {
       if (u != p && !cd.removed[u])
         self(self, u, v, d + 1, out);
   };
-  cd.build([&](int c) {
+  cd.go([&](int c) {
     vi every{0};
     for (int u : g[c])
       if (!cd.removed[u]) {

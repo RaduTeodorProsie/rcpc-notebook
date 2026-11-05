@@ -1,12 +1,13 @@
 /**
  * Name: Persistent segment tree
- * Description: Point assignment and query of $[l, r)$ for any
+ * Description: Point update and query of $[l, r)$ for any
  *   associative `op` with identity `id` (marked lines), keeping
- *   every version: `set` returns a new root and old roots stay
- *   valid. Root $0$ is the array of $n$ copies of `id`. For the
- *   $k$-th smallest of $a[l..r)$: version $i$ counts the values in
- *   $a[0..i)$; walk down roots $r$ and $l$ together, comparing the
- *   difference of the left children's counts with $k$.
+ *   every version: `set` copies the $O(log n)$ nodes on the path
+ *   to $i$ and returns the new root; old roots stay valid. Root $0$
+ *   is the array of $n$ copies of `id`. To change what an update
+ *   does, edit the leaf line: `t[y].v = op(t[x].v, v)` is point add.
+ *   Node $x$ covers the same range $[l o, h i)$ in every version, so
+ *   two versions can be walked down side by side (`kth`).
  * Time: $O(log n)$ time and new nodes per operation
  */
 #pragma once
@@ -47,3 +48,23 @@ struct PST {
               qry(t[x].r, m, hi, l, r));
   }
 };
+// --- uses ---
+// Version i counts the values in a[0..i), values in [0, n):
+//   rt[i + 1] = p.set(rt[i], a[i], p.query(rt[i], a[i],
+//                                          a[i] + 1) + 1);
+// Count of values below x in a[l..r): query(rt[r], 0, x) -
+// query(rt[l], 0, x). k-th smallest (0-indexed) of a[l..r):
+// at each node, the left child of R minus that of L
+// counts the values of a[l..r) in the left half; go left
+// if k is below that count.
+int kth(PST& p, int L, int R, int k) {
+  auto& t = p.t;
+  int lo = 0, hi = p.n;
+  while (hi - lo > 1) {
+    int m = (lo + hi) / 2;
+    ll c = t[t[R].l].v - t[t[L].l].v;
+    if (k < c) L = t[L].l, R = t[R].l, hi = m;
+    else k -= c, L = t[L].r, R = t[R].r, lo = m;
+  }
+  return lo;
+}

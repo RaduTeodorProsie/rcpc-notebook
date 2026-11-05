@@ -1,6 +1,7 @@
 #include "graph/lca.h"
 #include "graph/virtualtree.h"
 #include "graph/hld.h"
+#include "graph/hldorder.h"
 #include "graph/centroid.h"
 #include "testlib.h"
 int main() {
@@ -29,6 +30,20 @@ int main() {
       CHECK(l.dist(a, b) == dep[a] + dep[b] - 2 * dep[c]);
       CHECK(l.anc(c, a) && l.anc(c, b) && l.anc(a, a));
       CHECK(l.anc(a, b) == (c == a));
+      {  // path in order
+        vi want, left, right;
+        for (int x = a; x != c; x = par[x]) left.push_back(x);
+        for (int x = b; x != c; x = par[x]) right.push_back(x);
+        want = left, want.push_back(c);
+        want.insert(want.end(), right.rbegin(), right.rend());
+        vi at(n), got;
+        rep(v, 0, n) at[h.pos[v]] = v;
+        pathInOrder(h, a, b, [&](int lo, int hi, bool rev) {
+          if (rev) for (int i = hi - 1; i >= lo; --i) got.push_back(at[i]);
+          else rep(i, lo, hi) got.push_back(at[i]);
+        });
+        CHECK(got == want);
+      }
       for (bool edges : {false, true}) {
         ll want = 0;
         for (int x = a; x != c; x = par[x]) want += val[x];
@@ -74,7 +89,7 @@ int main() {
     CHECK(pathsUpTo(g, K) == want);
     Centroid cd(g);
     vi order;
-    cd.build([&](int c) { order.push_back(c); });
+    cd.go([&](int c) { order.push_back(c); });
     CHECK(sz(order) == n);
     // centroid tree depth is logarithmic
     rep(v, 0, n) {

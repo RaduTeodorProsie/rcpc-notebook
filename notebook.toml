@@ -4,9 +4,9 @@
 # A leading "+" ("+lazyvar.frag") keeps a file right after the previous one.
 
 title = "RCPC 2026"
-team = "Team Name"
-members = ["Member One", "Member Two", "Member Three"]
-university = "University"
+team = "Yippee"
+members = ["Luchianov Teodor", "Prosie Radu-Teodor", "Verzotti Matteo"]
+university = "University of Bucharest"
 
 [layout]
 code_size = 7.0       # pt, monospace code
@@ -17,19 +17,20 @@ margin_top = 11.0     # mm (the running header sits in here)
 margin_bottom = 6.0   # mm
 gutter = 4.5          # mm between columns
 gap = 9.0             # pt between snippets
-window = 6            # how many upcoming snippets the packer may pick from
+window = 8             # how many upcoming snippets the packer may pick from
 max_cols = 60         # build.py warns about code lines wider than this
 
 [[chapter]]
 name = "Contest"
 dir = "contest"
-files = ["template.cpp", "hash.sh", "stresstutorial.typ", "stress.sh", "gen.py",
+files = ["template.cpp", "hash.sh", "stresstutorial.typ", "stress.sh", "gen_array.py",
+         "gen_queries.py", "gen_string.py", "gen_tree.py", "gen_graph.py",
          "speedup.cpp", "troubleshoot.typ"]
 
 [[chapter]]
 name = "Mathematics"
 dir = "math"
-files = ["formulas.typ", "theorems.typ", "numbers.typ"]
+files = ["combinatorics.typ", "formulas.typ", "theorems.typ", "numbers.typ"]
 
 [[chapter]]
 name = "Number theory and algebra"
@@ -41,14 +42,14 @@ files = ["modint.h", "crt.h", "millerrabin.h", "pollard.h", "dlog.h", "ntt.h",
 name = "Data structures"
 dir = "data-structures"
 files = ["dsu.h", "rollback.h", "dyncon.h", "fenwick.h", "segtree.h", "lazy.h",
-         "+lazyvar.frag", "pst.h", "treap.h", "sparsetable.h", "lichao.h", "pbds.h",
+         "+lazyvar.frag", "beats.h", "pst.h", "treap.h", "sparsetable.h", "lichao.h", "cht.h", "staircase.h", "pbds.h",
          "mo.frag"]
 
 [[chapter]]
 name = "Graphs"
 dir = "graph"
-files = ["dinic.h", "mcmf.h", "hopcroft.h", "hungarian.h", "blossom.h", "scc.h",
-         "twosat.h", "lowlink.h", "euler.h", "lca.h", "hld.h", "virtualtree.h",
+files = ["spfa.h", "dinic.h", "mcmf.h", "hopcroft.h", "hungarian.h", "blossom.h", "scc.h",
+         "twosat.h", "lowlink.h", "euler.h", "lca.h", "hld.h", "hldorder.h", "virtualtree.h",
          "centroid.h"]
 
 [[chapter]]
@@ -60,10 +61,19 @@ files = ["kmp.h", "zfunc.h", "manacher.h", "hashing.h", "suffixarray.h", "sam.h"
 [[chapter]]
 name = "Geometry"
 dir = "geometry"
-files = ["point.h", "lines.h", "polygon.h", "hull.h", "closest.h", "halfplane.h",
-         "circles.h", "minkowski.h"]
+files = ["point.h", "lines.h", "angle.h", "polygon.h", "polycut.h", "hull.h",
+         "closest.h", "halfplane.h", "circles.h", "tangents.h", "polycircle.h",
+         "minkowski.h", "manhattanmst.h", "point3.h"]
 
 [[chapter]]
 name = "Dynamic programming"
 dir = "dp"
-files = ["dcopt.h", "knuth.h", "lis.h", "slope.h", "transforms.h"]
+files = ["dcopt.h", "knuth.h", "lis.h", "aliens.h", "slope.h", "subsets.h",
+         "supersets.h", "xorT.h", "divisors.h", "multiples.h"]
+
+[[chapter]]
+name = "Techniques"
+dir = "techniques"
+files = ["counting.typ", "genfunc.typ", "expected.typ", "random.typ", "games.typ",
+         "matrix.h", "offline.typ", "parallelbs.h", "sqrt.typ", "splitrebuild.h",
+         "greedy.typ", "dptech.typ", "graphtricks.typ", "fracturing.typ"]

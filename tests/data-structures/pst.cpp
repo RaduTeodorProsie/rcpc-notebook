@@ -28,13 +28,7 @@ int main() {
     rep(i, 0, n) rt.push_back(p.set(rt[i], a[i], p.query(rt[i], a[i], a[i] + 1) + 1));
     rep(q, 0, 50) {
       int l = rnd(0, n - 1), r = rnd(l + 1, n), k = rnd(0, r - l - 1);
-      int L = rt[l], R = rt[r], lo = 0, hi = n, kk = k;
-      while (hi - lo > 1) {
-        int m = (lo + hi) / 2;
-        ll c = p.t[p.t[R].l].v - p.t[p.t[L].l].v;
-        if (kk < c) L = p.t[L].l, R = p.t[R].l, hi = m;
-        else kk -= c, L = p.t[L].r, R = p.t[R].r, lo = m;
-      }
+      int lo = kth(p, rt[l], rt[r], k);
       vi b(a.begin() + l, a.begin() + r);
       sort(all(b));
       CHECK(lo == b[k]);

@@ -1,27 +1,7 @@
 // Name: Formulas
-#let sec(t) = table.cell(colspan: 2, inset: (top: 4pt, bottom: 1.5pt, x: 2pt),
-  text(font: sys.inputs.at("sans", default: "Helvetica Neue"), weight: "bold", size: 6.3pt, tracking: 0.05em, upper(t)))
+#import "/snippets/sheet.typ": sec
 #table(
   columns: (auto, 1fr), stroke: none, inset: (x: 2pt, y: 1.8pt),
-  sec[Sums],
-  [Powers], [$sum_(i=1)^n i^2 = n(n+1)(2n+1)\/6$, #h(3pt) $sum_(i=1)^n i^3 = (n(n+1)\/2)^2$],
-  [Geometric], [$sum_(i=0)^(n-1) r^i = (r^n - 1)\/(r - 1)$, #h(3pt) $sum_(i>=0) i r^i = r\/(1-r)^2$],
-  sec[Counting],
-  [Vandermonde], [$sum_k binom(m, k) binom(n, r-k) = binom(m+n, r)$],
-  [Hockey stick], [$sum_(i=r)^n binom(i, r) = binom(n+1, r+1)$],
-  [Stars, bars], [solutions of $x_1 + dots + x_k = n$ with $x_i >= 0$: $binom(n+k-1, k-1)$],
-  [Catalan $C_n$], [balanced bracket strings with $n$ pairs (also binary trees with $n$ nodes, triangulations of an $(n+2)$-gon): $C_n = binom(2n, n)\/(n+1)$, $C_(n+1) = sum_i C_i C_(n-i)$],
-  [Stirling 1 \ $c(n,k)$], [permutations of $n$ elements with exactly $k$ cycles: $c(n,k) = c(n-1,k-1) + (n-1) c(n-1,k)$],
-  [Stirling 2 \ $S(n,k)$], [ways to split $n$ labelled items into $k$ non-empty unlabelled groups: $S(n,k) = S(n-1,k-1) + k S(n-1,k)$, by incl.–excl. $S(n,k) = 1/k! sum_(i=0)^k (-1)^i binom(k,i)(k-i)^n$],
-  [Bell $B_n$], [ways to split $n$ labelled items into any number of non-empty groups: $B_n = sum_k S(n,k)$, $B_(n+1) = sum_k binom(n, k) B_k$],
-  [Derangements], [permutations without fixed points: $D_n = (n-1)(D_(n-1) + D_(n-2)) = n! sum_(i=0)^n (-1)^i \/ i!$],
-  [Partitions $p(n)$], [ways to write $n$ as an unordered sum of positive integers: $p(n) = sum_(k != 0) (-1)^(k+1) p(n - k(3k-1)\/2)$, $k = plus.minus 1, plus.minus 2, dots$],
-  [Incl.–excl.], [$|union.big A_i| = sum_(S != emptyset) (-1)^(|S|+1) |inter.big_(i in S) A_i|$],
-  sec[Fast computation],
-  [$S(n, dot)$ row], [the incl.–excl. formula is a convolution: $S(n,k) = sum_(i+j=k) ((-1)^i \/ i!)(j^n \/ j!)$, one NTT: `stirling2`],
-  [$c(n, dot)$ row], [coefficients of $x(x+1) dots (x+n-1)$, divide and conquer with NTT: `stirling1`],
-  [$B_n$, one $n$], [sum of the $S(n, dot)$ row; all $B_0..B_n$: Bell triangle in $O(n^2)$],
-  [$p(0..n)$], [the recurrence above has $O(sqrt(n))$ terms: $O(n sqrt(n))$ total],
   sec[Number theory],
   [Möbius], [$mu(n) = (-1)^k$ if $n$ is a product of $k$ distinct primes, else $0$. \ $g(n) = sum_(d|n) f(d) <==> f(n) = sum_(d|n) mu(d) g(n\/d)$, #h(3pt) $sum_(d|n) mu(d) = [n = 1]$],
   [Totient], [$phi(n) = \#{1 <= i <= n : gcd(i, n) = 1} = n product_(p|n) (1 - 1\/p)$, #h(3pt) $sum_(d|n) phi(d) = n$],

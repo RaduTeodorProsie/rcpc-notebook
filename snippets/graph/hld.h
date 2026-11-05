@@ -1,10 +1,15 @@
 /**
  * Name: Heavy-light decomposition
  * Description: `pos[v]` orders vertices so that heavy paths and
- *   subtrees are contiguous; the subtree of $v$ is
- *   $[p o s_v, p o s_v + s i z_v)$. `path(a, b, f)` calls `f(l, r)`
- *   on $O(log n)$ ranges $[l, r)$ covering the path; with
- *   `edges`, the LCA is skipped (edge values live at the child).
+ *   subtrees are contiguous: build any range structure on the
+ *   array `a[pos[v]]`. Subtree of $v$: $[p o s_v, p o s_v + s i z_v)$.
+ *   `path(a, b, f)` calls `f(l, r)` on $O(log n)$ ranges $[l, r)$
+ *   of positions that together cover the path, in no particular
+ *   order: fine for commutative `op` (else `hldorder.h`).
+ *   Values on vertices: store the value of $v$ at `pos[v]`, the
+ *   ranges include both ends and the LCA. Values on edges: store
+ *   edge $(p a r_v, v)$ at `pos[v]` and pass `edges = true`, which
+ *   skips the LCA's position, so exactly the path's edges remain.
  * Time: $O(log n)$ ranges per path
  */
 #pragma once
