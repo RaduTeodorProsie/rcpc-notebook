@@ -36,7 +36,7 @@ U comp(U f, U g) {
           (f.first * g.second + f.second) % P};
 }
 // == range add; maximum and how many times it occurs ==
-struct T { ll mx = LLONG_MIN; int cnt = 0; };
+struct T { ll mx = LLONG_MIN / 2; int cnt = 0; };
 using U = ll;
 U none = 0;
 T op(T a, T b) {

@@ -1,7 +1,8 @@
 /**
  * Name: Staircase
  * Description: Insert points $(x, y)$; `query(q)` is the largest
- *   $y$ among points with $x >= q$ (`LLONG_MIN` if none). Keeps
+ *   $y$ among points with $x >= q$ (`LLONG_MIN / 2` if none, so
+ *   negating the answer is safe). Keeps
  *   only points that no other point beats in both coordinates, so
  *   $y$ strictly decreases as $x$ grows and the answer is the first
  *   kept point with $x >= q$. Other directions: negate $x$ (for
@@ -21,6 +22,6 @@ struct Staircase {
   }
   ll query(ll q) {
     auto it = m.lower_bound(q);
-    return it == m.end() ? LLONG_MIN : it->second;
+    return it == m.end() ? LLONG_MIN / 2 : it->second;
   }
 };

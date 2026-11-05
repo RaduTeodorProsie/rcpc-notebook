@@ -12,7 +12,7 @@
 #pragma once
 struct Seg {
   using T = ll; //!
-  T id = LLONG_MIN; //!
+  T id = LLONG_MIN / 2; // /2: safe to negate //!
   T op(T a, T b) { return max(a, b); } //!
   int n;
   vector<T> t;

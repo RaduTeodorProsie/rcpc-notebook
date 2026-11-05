@@ -10,10 +10,21 @@ int main() {
         ll x = rnd(-15, 15), y = rnd(-15, 15);
         s.insert(x, y), pts.push_back({x, y});
       } else {
-        ll x = rnd(-17, 17), want = LLONG_MIN;
+        ll x = rnd(-17, 17), want = LLONG_MIN / 2;
         for (auto [px, py] : pts) if (px >= x) want = max(want, py);
         CHECK(s.query(x) == want);
       }
+    }
+  }
+  rep(it, 0, 300) {  // smallest y with x <= q, by negating both
+    Staircase s;
+    vector<pair<ll, ll>> pts;
+    rep(q, 0, 100) {
+      ll x = rnd(-15, 15), y = rnd(-15, 15);
+      if (rnd(0, 1)) s.insert(-x, -y), pts.push_back({x, y});
+      ll want = LLONG_MAX / 2 + 1, got = -s.query(-x);
+      for (auto [px, py] : pts) if (px <= x) want = min(want, py);
+      CHECK(got == want, "got %lld want %lld", got, want);
     }
   }
   rep(it, 0, 300) {

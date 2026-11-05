@@ -42,6 +42,8 @@ int main() {
 #else
         ll mx = *max_element(a.begin() + l, a.begin() + r);
         CHECK(t.mx == mx && t.cnt == count(a.begin() + l, a.begin() + r, mx));
+        auto e = s.query(l, l);  // empty: identity, safe to negate
+        CHECK(e.cnt == 0 && -e.mx == -(LLONG_MIN / 2));
 #endif
       }
     }
