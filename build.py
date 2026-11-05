@@ -29,11 +29,13 @@ import re
 import shutil
 import subprocess
 import sys
+import textwrap
 import tomllib
 
 ROOT = pathlib.Path(__file__).resolve().parent
 BUILD = ROOT / "build"
-LANG = {".cpp": "cpp", ".h": "cpp", ".hpp": "cpp", ".sh": "bash", ".py": "python", ".typ": "typ"}
+LANG = {".cpp": "cpp", ".h": "cpp", ".hpp": "cpp", ".frag": "cpp", ".sh": "bash", ".py": "python",
+        ".typ": "typ"}  # .frag: C++ fragment (not compiled on its own)
 FIELDS = {"name", "description", "time", "memory", "usage", "needs", "status",
           "author", "date", "source", "license"}
 SHOWN = ["name", "description", "time", "memory", "usage"]
@@ -54,6 +56,9 @@ def parse_fields(lines):
                 meta[key] += "\n" + raw.rstrip()
             else:
                 meta[key] += " " + raw.strip()
+    if "usage" in meta:  # continuation lines carry the header's indent: drop it
+        first, *rest = meta["usage"].split("\n")
+        meta["usage"] = "\n".join([first, *textwrap.dedent("\n".join(rest)).split("\n")]) if rest else first
     return meta
 
 
@@ -122,6 +127,8 @@ def load():
     for ci, ch in enumerate(cfg["chapter"]):
         items = []
         for f in ch["files"]:
+            follow = f.startswith("+")  # keep right after the previous file
+            f = f.lstrip("+")
             path = ROOT / "snippets" / ch["dir"] / f
             meta, code = split_header(path, path.read_text())
             lang = LANG.get(path.suffix, "")
@@ -141,6 +148,7 @@ def load():
                 title=meta.get("name") or path.stem,
                 file=f,
                 chapter=ci,
+                follow=follow,
                 lang=lang,
                 kind="typ" if lang == "typ" else "code",
                 path=str(path.relative_to(ROOT)),
@@ -173,8 +181,8 @@ def check(cfg):
     ok = True
     for ch in cfg["chapter"]:
         for f in ch["files"]:
-            path = ROOT / "snippets" / ch["dir"] / f
-            if LANG.get(path.suffix) != "cpp" or f == "template.cpp":
+            path = ROOT / "snippets" / ch["dir"] / f.lstrip("+")
+            if LANG.get(path.suffix) != "cpp" or f == "template.cpp" or path.suffix == ".frag":
                 continue
             # x86-only pragmas (avx2) cannot be checked on other machines
             if "#pragma GCC target" in path.read_text() and platform.machine() not in ("x86_64", "AMD64"):

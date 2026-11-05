@@ -160,20 +160,20 @@
       let unit(part, code, uses, off, pinned, brk) = (
         ci: ci, ii: ii, part: part, code: code, uses: uses, off: off,
         h: mh(snippet(it, part: part, code: code, uses: uses, off: off)),
-        pinned: pinned, brk: brk,
+        pinned: pinned, brk: brk, extra: (),
       )
+      let start = us.len()
       let h = mh(snippet(it))
       if h <= cap or it.kind != "code" {
-        us.push((ci: ci, ii: ii, part: 0, code: none, uses: true, off: 0, h: h, pinned: false, brk: false))
-        continue
-      }
+        us.push((ci: ci, ii: ii, part: 0, code: none, uses: true, off: 0, h: h, pinned: false,
+          brk: false, extra: ()))
+      } else {
       let has-uses = it.uses != ""
       // Too tall: first try moving the Uses block into its own box.
       if has-uses and mh(snippet(it, uses: false)) <= cap {
         us.push(unit(0, none, false, 0, true, false))
         us.push(unit(1, "", true, 0, true, false))
-        continue
-      }
+      } else {
       // Still too tall: cut the code at blank lines, greedily.
       let segs = ()
       let cur = ()
@@ -198,6 +198,22 @@
         off += p.len()
       }
       if has-uses { us.push(unit(parts.len(), "", true, 0, true, false)) }
+      }
+      }
+      // `follow` (a "+" in notebook.toml): print right after the previous snippet.
+      if it.at("follow", default: false) and start > 0 {
+        let prev = us.at(start - 1)
+        let new = us.slice(start)
+        if new.len() == 1 and not prev.brk and prev.h + gap + new.at(0).h <= cap {
+          let merged = prev
+          merged.insert("h", prev.h + gap + new.at(0).h)
+          merged.insert("extra", prev.extra + (new.at(0),))
+          us = us.slice(0, start - 1) + (merged,)
+        } else {
+          // Too tall to share a box: keep both strictly in order instead.
+          us = us.slice(0, start - 1) + ((..prev, pinned: true),) + new.map(u => (..u, pinned: true))
+        }
+      }
     }
     units.push(us)
   }
@@ -278,7 +294,12 @@
     if i > 0 { v(if col.at(i - 1).kind == "chapter" { head-gap } else { gap }) }
     if e.kind == "toc" { toc(labels) }
     else if e.kind == "chapter" { chapter-head(e.ci) }
-    else { snippet(chapters.at(e.ci).items.at(e.ii), part: e.part, code: e.code, uses: e.uses, off: e.off) }
+    else {
+      for (j, u) in ((e,) + e.at("extra", default: ())).enumerate() {
+        if j > 0 { v(gap) }
+        snippet(chapters.at(u.ci).items.at(u.ii), part: u.part, code: u.code, uses: u.uses, off: u.off)
+      }
+    }
   }
 })
 
@@ -320,7 +341,11 @@
   let labels = (:)
   for (k, col) in cols.enumerate() {
     for e in col {
-      if e.kind == "item" and e.part == 0 { labels.insert(str(e.ci) + "-" + str(e.ii), col-label(k)) }
+      if e.kind == "item" {
+        for u in (e,) + e.at("extra", default: ()) {
+          if u.part == 0 { labels.insert(str(u.ci) + "-" + str(u.ii), col-label(k)) }
+        }
+      }
     }
   }
   let npages = calc.ceil(cols.len() / 3)

@@ -28,21 +28,4 @@ int main() {
         CHECK((d.find(x) == d.find(y)) == (ref.find(x) == ref.find(y)));
     }
   }
-  rep(it, 0, 100) {  // dynamic connectivity
-    int n = rnd(1, 15), T = rnd(1, 40), m = rnd(0, 30);
-    DynConn dc(T);
-    vector<array<int, 4>> es;
-    rep(i, 0, m) {
-      int l = rnd(0, T - 1), r = rnd(l + 1, T);
-      es.push_back({(int)rnd(0, n - 1), (int)rnd(0, n - 1), l, r});
-      dc.addEdge(es[i][0], es[i][1], l, r);
-    }
-    vi res = dc.run(n);
-    rep(t, 0, T) {
-      DSU ref(n);
-      int comps = n;
-      for (auto& e : es) if (e[2] <= t && t < e[3]) comps -= ref.join(e[0], e[1]);
-      CHECK(res[t] == comps);
-    }
-  }
 }

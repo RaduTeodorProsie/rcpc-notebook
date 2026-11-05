@@ -1,21 +1,25 @@
-#include "data-structures/mo.h"
 #include "testlib.h"
 int main() {
-  rep(it, 0, 200) {
+  rep(it, 0, 300) {
     int n = rnd(1, 200), q = rnd(1, 200);
     vi a(n);
     for (int& x : a) x = rnd(0, 20);
-    vector<pii> Q(q);
-    for (auto& [l, r] : Q) l = rnd(0, n), r = rnd(0, n), l > r ? swap(l, r) : void();
-    vi cnt(21);
-    int distinct = 0;
-    auto res = mo(n, Q,
-      [&](int i) { distinct += cnt[a[i]]++ == 0; },
-      [&](int i) { distinct -= --cnt[a[i]] == 0; },
-      [&]() { return distinct; });
+    vector<array<int, 3>> Q(q), orig;
     rep(i, 0, q) {
-      set<int> s(a.begin() + Q[i].first, a.begin() + Q[i].second);
-      CHECK(res[i] == sz(s));
+      int l = rnd(0, n), r = rnd(0, n);
+      if (l > r) swap(l, r);
+      Q[i] = {l, r, i};
+    }
+    orig = Q;
+    vi cnt(21), ans(q);
+    int distinct = 0;
+    auto add = [&](int i) { distinct += cnt[a[i]]++ == 0; };
+    auto del = [&](int i) { distinct -= --cnt[a[i]] == 0; };
+    auto get = [&]() { return distinct; };
+#include "data-structures/mo.frag"
+    for (auto [l, r, id] : orig) {
+      set<int> s(a.begin() + l, a.begin() + r);
+      CHECK(ans[id] == sz(s));
     }
   }
 }

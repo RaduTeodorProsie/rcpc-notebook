@@ -1,9 +1,14 @@
 /**
  * Name: Lazy segment tree
- * Description: Range update, range query on $[l, r)$. Edit the
- *   marked lines: node `T`, tag `U`, `op`, `apply` (tag on node)
- *   and `comp` (`f` after `g`). Example: range add, sum and min.
- *   Uses: other tag types.
+ * Description: Range update, range query on $[l, r)$. The marked
+ *   block is all you edit; the variants (next) replace it whole.
+ *   `T` is a node summary and `T{}` must be the identity of `op`.
+ *   `U` is a pending update and `none` the update that does
+ *   nothing. `apply(a, f)` changes node `a` as if `f` were done to
+ *   each of its elements (so `T` keeps whatever that needs, e.g.
+ *   `len`). `comp(f, g)` is the single update "first `g`, then
+ *   `f`". Build from leaves, here `T{v, v, 1}`. This block: range
+ *   add; sum and minimum.
  * Time: $O(log n)$
  */
 #pragma once
@@ -57,11 +62,3 @@ struct Lazy {
               qry(l, r, 2 * x + 1, m, hi));
   }
 };
-// --- uses ---
-// Range assign: U = ll, none = LLONG_MIN,
-//   apply: if (f != none) a.sum = f * a.len, a.mn = f;
-//   comp: return f != none ? f : g;
-// Affine x -> b x + c: U = pair (b, c), none = (1, 0),
-//   apply: sum = b * sum + c * len;
-//   comp: (f.b * g.b, f.b * g.c + f.c)
-// Leaves: T{v, v, 1}. Empty nodes must stay identities.

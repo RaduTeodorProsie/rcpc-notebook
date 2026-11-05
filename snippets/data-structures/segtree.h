@@ -1,9 +1,12 @@
 /**
  * Name: Segment tree
  * Description: Point set, query of $[l, r)$ for any associative
- *   `op` with identity `id` (edit the marked lines). `maxRight`
- *   returns the largest $r$ with `f(op(a[l..r)))` true, for a
- *   monotone `f` with `f(id)` true. Uses: walks.
+ *   `op` with identity `id` (the marked lines). `maxRight(l, f)`
+ *   is the largest $r$ with `f(op(a[l..r)))` true, for `f`
+ *   monotone with `f(id)` true; it can return the padded size.
+ * Usage: Seg s(n); s.set(i, v); s.query(l, r);
+ *   // first i >= l with a[i] >= x (op = max):
+ *   min(n, s.maxRight(l, [&](ll v) { return v < x; }))
  * Time: $O(log n)$
  */
 #pragma once
@@ -47,8 +50,3 @@ struct Seg {
     return n;
   }
 };
-// --- uses ---
-// First index i >= l with a[i] >= x (n if none); op = max.
-int firstAtLeast(Seg& s, int l, ll x) {
-  return s.maxRight(l, [&](ll v) { return v < x; });
-}

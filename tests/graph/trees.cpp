@@ -1,5 +1,6 @@
 #include "graph/lca.h"
 #include "graph/virtualtree.h"
+#include "graph/hld.h"
 #include "graph/centroid.h"
 #include "testlib.h"
 int main() {
@@ -26,6 +27,8 @@ int main() {
       int a = rnd(0, n - 1), b = rnd(0, n - 1), c = naive(a, b);
       CHECK(l.lca(a, b) == c && h.lca(a, b) == c);
       CHECK(l.dist(a, b) == dep[a] + dep[b] - 2 * dep[c]);
+      CHECK(l.anc(c, a) && l.anc(c, b) && l.anc(a, a));
+      CHECK(l.anc(a, b) == (c == a));
       for (bool edges : {false, true}) {
         ll want = 0;
         for (int x = a; x != c; x = par[x]) want += val[x];
@@ -54,7 +57,7 @@ int main() {
       rep(i, 0, k) vs.push_back(rnd(0, n - 1));
       set<int> S(all(vs));
       for (int a : vs) for (int b : vs) S.insert(naive(a, b));
-      auto vt = virtualTree(h, vs);
+      auto vt = virtualTree(l, vs);
       set<int> got;
       for (auto [v, p] : vt) got.insert(v);
       CHECK(got == S);

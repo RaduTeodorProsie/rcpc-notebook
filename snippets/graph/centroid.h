@@ -3,8 +3,7 @@
  * Description: Calls `solve(c)` for every centroid, top-down.
  *   Inside, vertices with `removed` set belong to earlier levels,
  *   so a DFS from `c` that avoids them sees exactly the current
- *   component. `cpar` is the centroid tree. Uses: count paths of
- *   length at most $K$.
+ *   component. `cpar` is the centroid tree.
  * Time: $O(n log n)$ plus the work in `solve`
  */
 #pragma once
@@ -35,6 +34,7 @@ struct Centroid {
   }
 };
 // --- uses ---
+// Number of vertex pairs at distance at most K.
 ll pathsUpTo(const vector<vi>& g, int K) {
   Centroid cd(g);
   ll ans = 0;

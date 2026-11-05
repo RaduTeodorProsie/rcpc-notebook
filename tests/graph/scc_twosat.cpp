@@ -20,30 +20,39 @@ int main() {
       if (R[a][b] && s.comp[a] != s.comp[b]) CHECK(s.comp[a] > s.comp[b]);
     }
   }
-  rep(it, 0, 1000) {
-    int n = rnd(1, 8), m = rnd(0, 20);
+  rep(it, 0, 2000) {  // 2-SAT with every constraint type vs brute force
+    int n = rnd(1, 7), m = rnd(0, 12);
     TwoSat ts(n);
-    vector<pii> cl;
-    rep(i, 0, m) {
-      int a = rnd(0, n - 1), b = rnd(0, n - 1);
-      if (rnd(0, 1)) a = ~a;
-      if (rnd(0, 1)) b = ~b;
-      ts.either(a, b), cl.push_back({a, b});
-    }
     auto lit = [](int x, int mask) { return x < 0 ? !(mask >> ~x & 1) : (mask >> x & 1); };
+    auto rl = [&]() { int x = rnd(0, n - 1); return rnd(0, 1) ? ~x : x; };
+    vector<function<bool(int)>> cons;
+    rep(i, 0, m) {
+      int ty = rnd(0, 5), a = rl(), b = rl();
+      if (ty == 0) ts.either(a, b), cons.push_back([=](int k) { return lit(a, k) || lit(b, k); });
+      if (ty == 1) ts.implies(a, b), cons.push_back([=](int k) { return !lit(a, k) || lit(b, k); });
+      if (ty == 2) ts.force(a), cons.push_back([=](int k) { return lit(a, k); });
+      if (ty == 3) ts.same(a, b), cons.push_back([=](int k) { return lit(a, k) == lit(b, k); });
+      if (ty == 4) ts.differ(a, b), cons.push_back([=](int k) { return lit(a, k) != lit(b, k); });
+      if (ty == 5) {
+        vi li(rnd(0, 4));
+        for (int& x : li) x = rl();
+        ts.atMostOne(li);
+        cons.push_back([=](int k) { int c = 0; for (int x : li) c += lit(x, k); return c <= 1; });
+      }
+    }
     bool want = false;
     rep(mask, 0, 1 << n) {
       bool ok = true;
-      for (auto [a, b] : cl) ok &= lit(a, mask) || lit(b, mask);
+      for (auto& c : cons) ok &= c(mask);
       want |= ok;
     }
     vi val;
     bool got = ts.solve(val);
-    CHECK(got == want);
+    CHECK(got == want, "it=%d", it);
     if (got) {
       int mask = 0;
       rep(i, 0, n) mask |= val[i] << i;
-      for (auto [a, b] : cl) CHECK(lit(a, mask) || lit(b, mask));
+      for (auto& c : cons) CHECK(c(mask));
     }
   }
 }

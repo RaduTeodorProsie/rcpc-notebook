@@ -1,8 +1,8 @@
 /**
  * Name: Hopcroft-Karp
  * Description: Maximum bipartite matching; `ml[a]` / `mr[b]` is
- *   the partner or $-1$. Uses: minimum vertex cover (König),
- *   whose complement is a maximum independent set.
+ *   the partner or $-1$. The minimum vertex cover's complement
+ *   is a maximum independent set.
  * Time: $O(E sqrt(V))$
  */
 #pragma once

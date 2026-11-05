@@ -1,6 +1,7 @@
 # Notebook configuration. Order of chapters and files here is the
 # order in the PDF (the packer may swap nearby snippets inside a
 # chapter to avoid gaps; set layout.window = 1 to forbid that).
+# A leading "+" ("+lazyvar.frag") keeps a file right after the previous one.
 
 title = "RCPC 2026"
 team = "Team Name"
@@ -22,7 +23,8 @@ max_cols = 60         # build.py warns about code lines wider than this
 [[chapter]]
 name = "Contest"
 dir = "contest"
-files = ["template.cpp", "hash.sh", "stress.sh", "speedup.cpp", "troubleshoot.typ"]
+files = ["template.cpp", "hash.sh", "stresstutorial.typ", "stress.sh", "gen.py",
+         "speedup.cpp", "troubleshoot.typ"]
 
 [[chapter]]
 name = "Mathematics"
@@ -32,14 +34,15 @@ files = ["formulas.typ", "theorems.typ", "numbers.typ"]
 [[chapter]]
 name = "Number theory and algebra"
 dir = "number-theory"
-files = ["modint.h", "crt.h", "sieve.h", "millerrabin.h", "pollard.h", "dlog.h",
-         "ntt.h", "fft.h", "berlekamp.h", "gauss.h", "xorbasis.h", "floorsum.h"]
+files = ["modint.h", "crt.h", "millerrabin.h", "pollard.h", "dlog.h", "ntt.h",
+         "stirling.h", "fft.h", "gauss.h", "det.h", "xorbasis.h", "floorsum.h"]
 
 [[chapter]]
 name = "Data structures"
 dir = "data-structures"
-files = ["dsu.h", "rollback.h", "fenwick.h", "segtree.h", "lazy.h", "pst.h",
-         "treap.h", "sparsetable.h", "lichao.h", "pbds.h", "mo.h"]
+files = ["dsu.h", "rollback.h", "dyncon.h", "fenwick.h", "segtree.h", "lazy.h",
+         "+lazyvar.frag", "pst.h", "treap.h", "sparsetable.h", "lichao.h", "pbds.h",
+         "mo.frag"]
 
 [[chapter]]
 name = "Graphs"
@@ -63,4 +66,4 @@ files = ["point.h", "lines.h", "polygon.h", "hull.h", "closest.h", "halfplane.h"
 [[chapter]]
 name = "Dynamic programming"
 dir = "dp"
-files = ["dcopt.h", "knuth.h", "sos.h", "lis.h", "slope.h"]
+files = ["dcopt.h", "knuth.h", "lis.h", "slope.h", "transforms.h"]

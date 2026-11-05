@@ -17,7 +17,7 @@ int main() {
       ll x = rnd(-100, 101);
       int want = l;
       while (want < n && a[want] < x) ++want;
-      int got = min(firstAtLeast(s, l, x), n);
+      int got = min(n, s.maxRight(l, [&](ll v) { return v < x; }));
       CHECK(got == want, "l=%d x=%lld got %d want %d", l, x, got, want);
     }
   }

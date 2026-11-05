@@ -2,7 +2,7 @@
  * Name: Implicit treap
  * Description: Sequence with split/merge by position. `push` and
  *   `pull` carry the lazy reverse and the subtree sum; edit them
- *   for other data. Uses: insert, erase, reverse, range sum.
+ *   for other data. Positions are 0-based.
  * Time: $O(log n)$ expected
  */
 #pragma once
@@ -48,6 +48,7 @@ Node* merge(Node* a, Node* b) {
   return b;
 }
 // --- uses ---
+// Each returns the new root.
 Node* insert(Node* t, int pos, ll v) {
   auto [a, b] = split(t, pos);
   return merge(merge(a, new Node(v)), b);

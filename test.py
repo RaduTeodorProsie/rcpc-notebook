@@ -43,24 +43,65 @@ def flags(fast):
                    "-D_GLIBCXX_ASSERTIONS"]
 
 
+VARIANTS_RE = re.compile(r"^// variants: (\S+) (\S+)", re.M)
+
+
+def variants(path):
+    """For a test with `// variants: BASE.h FRAG.frag`: one generated header per
+    `// == name ==` block of FRAG, with BASE's marked (//!) block replaced by it."""
+    m = VARIANTS_RE.search(path.read_text())
+    if not m:
+        return None
+    base = (ROOT / "snippets" / m.group(1)).read_text().split("\n")
+    marked = [i for i, l in enumerate(base) if l.rstrip().endswith("//!")]
+    lo, hi = marked[0], marked[-1]
+    assert marked == list(range(lo, hi + 1)), f"{m.group(1)}: marked lines must be contiguous"
+    frag = (ROOT / "snippets" / m.group(2)).read_text()
+    frag = re.sub(r"\A\s*/\*\*.*?\*/\s*\n", "", frag, flags=re.S)
+    parts = re.split(r"^// == (.*?) ==[ \t]*$", frag, flags=re.M)[1:]
+    out = []
+    for k in range(0, len(parts), 2):
+        body = parts[k + 1].strip("\n").split("\n")
+        f = OUT / "gen" / f"{path.stem}_{k // 2}.h"
+        f.parent.mkdir(parents=True, exist_ok=True)
+        src = "\n".join(base[:lo] + body + base[hi + 1:])
+        if not f.exists() or f.read_text() != src:  # keep the mtime: no needless rebuilds
+            f.write_text(src)
+        out.append((parts[k], f))
+    return out
+
+
+def compile_run(path, exe, extra, deps, fast):
+    if not exe.exists() or exe.stat().st_mtime < max(d.stat().st_mtime for d in deps):
+        c = subprocess.run([gxx(), *flags(fast), *extra, str(path), "-o", str(exe)],
+                           capture_output=True, text=True)
+        if c.returncode != 0:
+            return "COMPILE", c.stderr
+    try:
+        r = subprocess.run([str(exe)], capture_output=True, text=True, timeout=TIMEOUT,
+                           env={**os.environ, "ASAN_OPTIONS": "detect_leaks=0"})
+    except subprocess.TimeoutExpired:
+        return "TIMEOUT", ""
+    return ("ok" if r.returncode == 0 else "FAIL"), (r.stderr + r.stdout)[-3000:]
+
+
 def run_one(path, fast):
     rel = path.relative_to(ROOT / "tests")
     exe = OUT / ("fast" if fast else "san") / rel.with_suffix("")
     exe.parent.mkdir(parents=True, exist_ok=True)
     t0 = time.time()
     deps = [path, ROOT / "tests/common.h", ROOT / "tests/testlib.h", *included(path)]
-    if not exe.exists() or exe.stat().st_mtime < max(d.stat().st_mtime for d in deps):
-        c = subprocess.run([gxx(), *flags(fast), str(path), "-o", str(exe)],
-                           capture_output=True, text=True)
-        if c.returncode != 0:
-            return rel, "COMPILE", c.stderr, time.time() - t0
-    try:
-        r = subprocess.run([str(exe)], capture_output=True, text=True, timeout=TIMEOUT,
-                           env={**os.environ, "ASAN_OPTIONS": "detect_leaks=0"})
-    except subprocess.TimeoutExpired:
-        return rel, "TIMEOUT", "", time.time() - t0
-    status = "ok" if r.returncode == 0 else "FAIL"
-    return rel, status, (r.stderr + r.stdout)[-3000:], time.time() - t0
+    vs = variants(path)
+    if vs is None:
+        status, log = compile_run(path, exe, [], deps, fast)
+        return rel, status, log, time.time() - t0
+    for i, (name, header) in enumerate(vs):
+        status, log = compile_run(path, exe.with_name(f"{exe.name}_{i}"),
+                                  [f"-DVARIANT={i}", f'-DVARIANT_FILE="{header}"'],
+                                  deps + [header], fast)
+        if status != "ok":
+            return rel, status, f"variant '{name}':\n{log}", time.time() - t0
+    return rel, "ok", "", time.time() - t0
 
 
 def included(path, seen=None):
@@ -81,11 +122,14 @@ def coverage():
     covered = set()
     for t in (ROOT / "tests").rglob("*.cpp"):
         covered |= included(t)
+        m = VARIANTS_RE.search(t.read_text())
+        if m:
+            covered |= {(ROOT / "snippets" / g).resolve() for g in m.groups()}
     missing = []
     for ch in cfg["chapter"]:
         for f in ch["files"]:
-            p = (ROOT / "snippets" / ch["dir"] / f).resolve()
-            if p.suffix in (".h", ".hpp") and p not in covered:
+            p = (ROOT / "snippets" / ch["dir"] / f.lstrip("+")).resolve()
+            if p.suffix in (".h", ".hpp", ".frag") and p not in covered:
                 missing.append(f"{ch['dir']}/{f}")
     print("snippets without a test:" if missing else "every .h snippet is tested")
     for m in missing:

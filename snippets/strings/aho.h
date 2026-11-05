@@ -3,9 +3,8 @@
  * Description: Automaton over lowercase patterns. After
  *   `build`, `nx` is the full transition table, `cnt[v]` is the
  *   number of patterns ending at state $v$ (as a suffix), and
- *   `ord` lists states in BFS order. Uses: total matches, and
- *   matches per pattern via the suffix-link tree. For DP over
- *   texts that avoid the patterns, forbid states with `cnt > 0`.
+ *   `ord` lists states in BFS order. For DP over texts that
+ *   avoid the patterns, forbid states with `cnt > 0`.
  * Time: $O(26 dot sum |p_i|)$
  */
 #pragma once

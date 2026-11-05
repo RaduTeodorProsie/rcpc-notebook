@@ -6,8 +6,6 @@
  *   `cnt[v]` is the number of occurrences of each string of $v$.
  *   Each state is a set of substrings with the same end
  *   positions; their lengths are $(l e n_(l i n k), l e n]$.
- *   Uses: distinct substrings, occurrences, longest common
- *   substring, $k$-th distinct substring.
  * Time: $O(n Sigma)$
  */
 #pragma once
@@ -53,6 +51,7 @@ struct SAM {
   }
 };
 // --- uses ---
+// Number of distinct non-empty substrings.
 ll distinct(SAM& a) {
   ll r = 0;
   rep(v, 1, sz(a.len)) r += a.len[v] - a.len[a.link[v]];

@@ -2,7 +2,7 @@
  * Name: Prefix function
  * Description: `pi[i]` is the longest proper border of
  *   $s[0..i]$. `match` returns all start positions of `pat` in
- *   $s$. Uses: smallest period.
+ *   $s$.
  * Time: $O(n + m)$
  */
 #pragma once

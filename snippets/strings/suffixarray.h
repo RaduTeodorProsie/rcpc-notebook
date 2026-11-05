@@ -2,8 +2,7 @@
  * Name: Suffix array
  * Description: `sa` lists the suffixes of $s$ in sorted order.
  *   `lcp[i]` is the LCP of suffixes `sa[i]` and `sa[i+1]`.
- *   $s$ must not contain `'\0'`. Uses: distinct substrings,
- *   longest common substring, LCP of any two suffixes.
+ *   $s$ must not contain `'\0'`.
  * Time: $O(n log n)$
  */
 #pragma once
@@ -49,6 +48,7 @@ vi lcpArray(const string& s, const vi& sa) {
   return lcp;
 }
 // --- uses ---
+// Number of distinct non-empty substrings.
 ll distinctSubstrings(const string& s) {
   vi lcp = lcpArray(s, suffixArray(s));
   ll n = sz(s), r = n * (n + 1) / 2;

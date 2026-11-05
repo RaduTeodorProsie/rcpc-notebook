@@ -35,10 +35,14 @@ snippet is ever split across a column or a page**.
 - Add the file to its chapter in `notebook.toml`; the order there is the
   print order, except that the packer may swap a snippet with one of the
   next `layout.window` snippets to avoid gaps (`window = 1` forbids it).
-- `.typ` files (formula sheets) are included as Typst content.
+- `.typ` files (formula sheets, guides) are included as Typst content.
+- `.frag` files are C++ fragments printed like code but not compiled on
+  their own (Mo's main loop, the lazy segment tree variants); tests
+  `#include` them or swap them in (see below).
 - The 6-character hash next to each title is
   `cpp -dD -P -fpreprocessed | tr -d '[:space:]' | md5sum | cut -c-6`
-  of the printed code, so a typed copy can be checked with `hash.sh`.
+  of the printed code, so a typed copy can be checked with `hash.sh`;
+  `sh hash.sh sol.cpp 40 75` hashes only lines 40–75 of a bigger file.
 
 ## Tests
 
@@ -46,6 +50,14 @@ One file per topic in `tests/<chapter>/`. A test `#include`s the
 snippets it covers (paths relative to `snippets/`) and `testlib.h`, and
 compares against a brute force on random inputs. It passes by exiting 0.
 Every snippet sees the template prelude through `-include tests/common.h`.
+
+A test starting with `// variants: data-structures/lazy.h data-structures/lazyvar.frag`
+is compiled once per `// == name ==` block of the fragment, with the base
+snippet's marked (`//!`) block replaced by that block; the test sees
+`VARIANT` (0, 1, ...) and includes `VARIANT_FILE`.
+
+Stress testing during the contest: `snippets/contest/` has `gen.py`
+(`python3 gen.py SEED KIND key=value`) and `stress.sh`.
 
 ## Layout
 

@@ -1,7 +1,9 @@
 /**
  * Name: Li Chao tree
  * Description: Insert lines $k x + m$, query the maximum at an
- *   integer $x in [l o, h i)$. Negate everything for minimum.
+ *   integer $x in [l o, h i)$. For the minimum: insert
+ *   `Line{-k, -m}` instead and negate the answer, since
+ *   $min(k x + m) = -max(-k x - m)$.
  * Time: $O(log C)$ per operation
  */
 #pragma once

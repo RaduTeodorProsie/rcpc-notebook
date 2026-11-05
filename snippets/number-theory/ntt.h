@@ -1,10 +1,16 @@
 /**
  * Name: Number theoretic transform
- * Description: `conv<M>(a, b)` multiplies polynomials modulo a
- *   prime $M = c dot 2^k + 1$ with primitive root $3$ ($998244353$,
- *   $167772161$, $469762049$), needs $2^k >= |a| + |b|$. Uses:
- *   product modulo any $m$, or exact up to $10^26$, by CRT.
- * Time: $O(n log n)$
+ * Description: Polynomial product modulo a prime. With
+ *   $a = sum a_i x^i$ and $b = sum b_j x^j$ as coefficient vectors,
+ *   `conv<M>(a, b)[k]` $= sum_(i+j=k) a_i b_j mod M$, size
+ *   $|a| + |b| - 1$. $M$ must be $c dot 2^k + 1$ with primitive root
+ *   $3$ and $2^k >= |a| + |b|$: $998244353$ ($k = 23$), $167772161$
+ *   ($25$), $469762049$ ($26$). For any other modulus such as
+ *   $10^9 + 7$, or exact products below $P_0 P_1 P_2 approx 7.8 dot 10^25$, call `convMod`:
+ *   three NTTs joined by CRT; entries must be in $[0, m)$.
+ * Usage: vector<ll> c = conv<998244353>(a, b);
+ *   vector<ll> d = convMod(a, b, 1000000007);
+ * Time: $O(n log n)$, `convMod` about 3 times slower
  */
 #pragma once
 template <int M> ll pw(ll b, ll e) {
@@ -55,6 +61,8 @@ vector<ll> conv(vector<ll> a, vector<ll> b) {
   return a;
 }
 // --- uses ---
+// Any m < 2^31. Exact (< 7.8e25): v01 + P0 * P1 * t2,
+// computed in __int128.
 vector<ll> convMod(const vector<ll>& a, const vector<ll>& b,
                    ll m) {
   const int P0 = 998244353, P1 = 167772161, P2 = 469762049;

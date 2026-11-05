@@ -2,7 +2,7 @@
  * Name: Fenwick tree
  * Description: Point add, prefix sum over $[0, i)$. `lower(k)`
  *   gives the smallest $i$ with `sum(i+1)` $> k$; needs all
- *   values $>= 0$. Uses: range add with range sum.
+ *   values $>= 0$.
  * Time: $O(log n)$ per operation
  */
 #pragma once
@@ -26,7 +26,8 @@ struct Fenwick {
   }
 };
 // --- uses ---
-struct RangeFenwick { // add on [l, r), sum on [0, i)
+// Range add on [l, r), prefix sum on [0, i).
+struct RangeFenwick {
   Fenwick a, b;
   RangeFenwick(int n) : a(n + 1), b(n + 1) {}
   void add(int l, int r, ll v) {

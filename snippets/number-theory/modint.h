@@ -1,7 +1,7 @@
 /**
  * Name: Modular integer
  * Description: Arithmetic modulo a prime `MOD` (`inv` uses
- *   Fermat). Uses: factorials and binomials.
+ *   Fermat).
  */
 #pragma once
 const int MOD = 998244353; //!
@@ -36,6 +36,7 @@ struct mint {
   mint inv() const { return pow(MOD - 2); }
 };
 // --- uses ---
+// Binomials: call initFact(max n) once.
 vector<mint> fact, ifact;
 void initFact(int n) {
   fact.assign(n + 1, 1), ifact.assign(n + 1, 1);

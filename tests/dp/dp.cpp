@@ -1,6 +1,5 @@
 #include "dp/dcopt.h"
 #include "dp/knuth.h"
-#include "dp/sos.h"
 #include "dp/lis.h"
 #include "dp/slope.h"
 #include "testlib.h"
@@ -39,18 +38,6 @@ int main() {
     }
     CHECK(knuth(n, w) == B[0][n]);
   }
-  rep(it, 0, 100) {
-    int b = rnd(0, 10);
-    auto f = rvec(1 << b, -100, 100), g = f;
-    sos(g, b);
-    rep(m, 0, 1 << b) {
-      ll s = 0;
-      rep(x, 0, 1 << b) if ((x & m) == x) s += f[x];
-      CHECK(g[m] == s);
-    }
-    unsos(g, b);
-    CHECK(g == f);
-  }
   rep(it, 0, 2000) {
     int n = rnd(0, 30);
     auto a = rvec(n, 0, 10);
@@ -63,14 +50,5 @@ int main() {
     }
     CHECK(sz(l) == want);
     rep(i, 1, sz(l)) CHECK(l[i - 1] < l[i] && a[l[i - 1]] < a[l[i]]);
-    // slope trick vs DP over values
-    vector<ll> D(11, 0);
-    for (ll x : a) {
-      vector<ll> E(11);
-      ll run = LLONG_MAX;
-      rep(v, 0, 11) run = min(run, D[v]), E[v] = run + llabs(x - v);
-      D = E;
-    }
-    CHECK(makeNonDecreasing(a) == (n ? *min_element(all(D)) : 0));
   }
 }

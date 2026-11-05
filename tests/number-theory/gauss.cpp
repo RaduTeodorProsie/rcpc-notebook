@@ -1,4 +1,7 @@
+#include "number-theory/modint.h"
+double abs(mint x) { return x.v; }
 #include "number-theory/gauss.h"
+#include "number-theory/det.h"
 #include "testlib.h"
 template <class T> T bruteDet(vector<vector<T>> a) {
   int n = sz(a);

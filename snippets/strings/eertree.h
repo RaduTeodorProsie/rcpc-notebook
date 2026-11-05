@@ -3,9 +3,9 @@
  * Description: One node per distinct palindromic substring, plus
  *   roots $0$ (length $-1$) and $1$ (length $0$). After `add(c)`,
  *   `last` is the longest palindromic suffix. After `count()`,
- *   `occ[v]` is the number of occurrences of node $v$. Uses:
- *   distinct palindromes $=$ nodes $- 2$, all palindromic
- *   substrings $= sum o c c$.
+ *   `occ[v]` is the number of occurrences of node $v$. Distinct
+ *   palindromes: number of nodes $- 2$; all palindromic
+ *   substrings: $sum o c c$.
  * Time: $O(n Sigma)$
  */
 #pragma once

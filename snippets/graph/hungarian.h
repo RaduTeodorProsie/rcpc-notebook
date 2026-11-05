@@ -1,8 +1,11 @@
 /**
  * Name: Hungarian algorithm
- * Description: Min-cost assignment for an $n times m$ cost matrix,
- *   $n <= m$. Returns (cost, column matched to each row). For
- *   maximum weight, negate the costs.
+ * Description: Min-cost assignment: every row (worker) gets a
+ *   different column (job). $a$ is $n times m$ with $n <= m$
+ *   (transpose otherwise). Returns (cost, column of each row).
+ *   Maximum weight: pass $a_(i j) = -w_(i j)$ and negate the cost.
+ *   Forbidden pairs: a big cost such as $10^15$; if the answer
+ *   uses one, no valid assignment exists.
  * Time: $O(n^2 m)$
  */
 #pragma once
