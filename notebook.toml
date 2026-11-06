@@ -85,4 +85,4 @@ files = ["dcopt.h", "knuth.h", "lis.h", "aliens.h", "slope.h"]
 [[chapter]]
 name = "Techniques"
 dir = "techniques"
-files = ["matrix.h", "parallelbs.h", "splitrebuild.h"]
+files = ["matrix.h", "parallelbs.h", "splitrebuild.h", "gray.h"]
