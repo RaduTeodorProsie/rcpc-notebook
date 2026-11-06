@@ -1,4 +1,5 @@
 #include "dp/dcopt.h"
+const ll INF = 1e18;  // the snippet's "unreachable" threshold
 #include "dp/knuth.h"
 #include "dp/lis.h"
 #include "dp/slope.h"

@@ -1,13 +1,14 @@
 /**
  * Name: SPFA and negative cycles
  * Description: Shortest distances from $s$ with any edge weights
- *   (`g[v]` holds `{u, w}`; `LLONG_MAX` = unreachable), and whether
- *   a negative cycle is reachable from $s$ (then $d$ is unusable,
- *   also for finding $-infinity$ vertices: use Bellman–Ford). A shortest path that needs $n$ edges must repeat a
- *   vertex. Cycles anywhere, or difference constraints
- *   $x_v - x_u <= w$ (edge $u -> v$): add a vertex with $0$-edges to
- *   all others and start there. Only non-negative weights: Dijkstra
- *   is safer, SPFA can be made slow.
+ *   (`g[v]` holds `{u, w}`; `LLONG_MAX` = unreachable). Returns
+ *   (`d`, `neg`): `neg` iff a negative cycle is reachable from $s$
+ *   (a path of $n$ edges repeats a vertex); then `d` is meaningless
+ *   (for the $-infinity$ vertices use Bellman–Ford). Negative
+ *   cycles anywhere, or difference
+ *   constraints $x_v - x_u <= w$ (edge $u -> v$): add a vertex with
+ *   $0$-edges to all others and start there. Weights all $>= 0$:
+ *   use Dijkstra, SPFA can be forced to be slow.
  * Usage: auto [d, neg] = spfa(g, s);
  * Time: $O(n m)$ worst case, usually much faster
  */
