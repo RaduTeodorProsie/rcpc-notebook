@@ -1,4 +1,5 @@
 #include "convolution/subsets.h"
+#include "convolution/supersets.h"
 #include "convolution/xorT.h"
 #include "convolution/divisors.h"
 #include "convolution/multiples.h"
