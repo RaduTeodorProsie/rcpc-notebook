@@ -1,13 +1,17 @@
 /**
- * Name: Subset zeta and Möbius
- * Description: For an array over bitmasks (size $2^B$), the zeta
- *   transform replaces $f(m)$ by $sum_(s subset.eq m) f(s)$, the sum
- *   over all submasks. Möbius (`inv`) is its inverse: from those
- *   sums it gives $f$ back. One bit at a time: after bit $b$,
- *   $f(m)$ is the sum over the $s$ obtained from $m$ by clearing
- *   some of bits $0..b$. OR convolution
- *   $c_k = sum_(i | j = k) a_i b_j$: zeta both, multiply pointwise,
- *   Möbius; it works because $i | j subset.eq m$ iff both $i, j subset.eq m$.
+ * Name: SOS: subset and superset zeta, Möbius
+ * Description: For an array over bitmasks (size $2^B$),
+ *   `subsets` (sum over subsets) replaces $f(m)$ by
+ *   $sum_(s subset.eq m) f(s)$, the sum over all submasks;
+ *   `supersets` by $sum_(s supset.eq m) f(s)$, over all
+ *   supermasks. `inv` (Möbius) undoes either. One bit at a time:
+ *   after bit $b$, $f(m)$ sums the $s$ obtained from $m$ by
+ *   clearing (setting) some of bits $0..b$. OR convolution
+ *   $c_k = sum_(i | j = k) a_i b_j$: `subsets` both, multiply
+ *   pointwise, `subsets(c, true)`; it works because
+ *   $i | j subset.eq m$ iff both $i, j subset.eq m$. AND
+ *   convolution: the same with `supersets`. Typical: $g(m)$ =
+ *   how many items contain all bits of $m$.
  * Usage: subsets(a), subsets(b);
  *   rep(i, 0, sz(a)) a[i] *= b[i];
  *   subsets(a, true); // a = OR convolution
@@ -19,6 +23,12 @@ void subsets(vector<ll>& f, bool inv = false) {
   for (int b = 1; b < sz(f); b *= 2)
     for (int i = 0; i < sz(f); i += 2 * b)
       rep(m, i, i + b) f[m + b] += s * f[m];
+}
+void supersets(vector<ll>& f, bool inv = false) {
+  ll s = inv ? -1 : 1;
+  for (int b = 1; b < sz(f); b *= 2)
+    for (int i = 0; i < sz(f); i += 2 * b)
+      rep(m, i, i + b) f[m] += s * f[m + b];
 }
 // --- uses ---
 // Submasks s of m, decreasing (s = 0 handled separately):

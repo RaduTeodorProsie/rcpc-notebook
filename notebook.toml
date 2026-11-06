@@ -42,7 +42,7 @@ files = ["modint.h", "crt.h", "millerrabin.h", "pollard.h", "dlog.h", "sqrtmod.h
 name = "Convolutions and polynomials"
 dir = "convolution"
 files = ["fft.h", "ntt.h", "+poly.h", "interp.h", "stirling.h", "berlekamp.h", "subsets.h",
-         "supersets.h", "xorT.h", "subsetconv.h", "divisors.h", "multiples.h"]
+         "xorT.h", "subsetconv.h", "divisors.h", "multiples.h"]
 
 [[chapter]]
 name = "Numerical"
