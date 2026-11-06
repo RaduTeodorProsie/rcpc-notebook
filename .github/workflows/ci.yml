@@ -10,8 +10,8 @@ jobs:
           typst-version: 0.15.1
       - name: Install fonts
         run: sudo apt-get update && sudo apt-get install -y fonts-dejavu-core
-      - name: Tests (sanitizers)
-        run: python3 test.py
+      - name: Tests (sanitizers; performance tests run locally only)
+        run: python3 test.py --no-perf
       - name: Build PDF
         run: python3 build.py --check
       - uses: actions/upload-artifact@v4

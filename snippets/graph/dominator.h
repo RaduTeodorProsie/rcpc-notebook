@@ -14,8 +14,7 @@
  *   smallest `sdom` on a forest path. Then
  *   $"idom"(v) = "sdom"(v)$ unless some $u$ on the tree path
  *   $"sdom"(v) .. v$ has a smaller `sdom`, in which case
- *   $"idom"(v) = "idom"(u)$. Recursive DFS: mind the stack on
- *   long paths.
+ *   $"idom"(v) = "idom"(u)$. No recursion, so long paths are fine.
  * Time: $O((n + m) log n)$
  */
 #pragma once
@@ -24,30 +23,36 @@ vi dominators(const vector<vi>& g, int s) {
   vi num(n, -1), ord(n), par(n), sdom(n), dsu(n), best(n),
       id(n), idom(n, -1);
   vector<vi> rg(n), bk(n);
-  auto dfs = [&](auto& dfs, int v) -> void {
-    ord[t] = v, num[v] = t++;
-    for (int u : g[v]) {
-      if (num[u] < 0) dfs(dfs, u), par[num[u]] = num[v];
-      rg[num[u]].push_back(num[v]);
-    }
-  };
-  dfs(dfs, s);
+  vi st{s}, it(n); // iterative DFS: no deep recursion
+  ord[t] = s, num[s] = t++;
+  while (sz(st)) {
+    int v = st.back();
+    if (it[v] == sz(g[v])) { st.pop_back(); continue; }
+    int u = g[v][it[v]++];
+    if (num[u] < 0)
+      par[t] = num[v], ord[t] = u, num[u] = t++, st.push_back(u);
+    rg[num[u]].push_back(num[v]);
+  }
   rep(i, 0, t) sdom[i] = dsu[i] = best[i] = i;
-  auto find = [&](auto& find, int v, int d) -> int {
-    if (dsu[v] == v) return d ? -1 : v;
-    int r = find(find, dsu[v], d + 1);
-    if (r < 0) return v;
-    if (sdom[best[dsu[v]]] < sdom[best[v]])
-      best[v] = best[dsu[v]];
-    dsu[v] = r;
-    return d ? r : best[v];
+  auto find = [&](int v) { // min sdom on the DSU path, compress
+    if (dsu[v] == v) return v;
+    st.clear(); // v and its ancestors below the top two
+    for (int u = v; dsu[dsu[u]] != dsu[u]; u = dsu[u])
+      st.push_back(u);
+    int r = sz(st) ? dsu[st.back()] : dsu[v];
+    for (int k = sz(st) - 1; k >= 0; --k) {
+      int u = st[k], p = k + 1 < sz(st) ? st[k + 1] : r;
+      if (sdom[best[p]] < sdom[best[u]]) best[u] = best[p];
+      dsu[u] = r;
+    }
+    return best[v];
   };
   for (int i = t - 1; i >= 0; --i) {
     for (int j : rg[i])
-      sdom[i] = min(sdom[i], sdom[find(find, j, 0)]);
+      sdom[i] = min(sdom[i], sdom[find(j)]);
     if (i) bk[sdom[i]].push_back(i);
     for (int w : bk[i]) {
-      int u = find(find, w, 0);
+      int u = find(w);
       id[w] = sdom[u] == sdom[w] ? sdom[w] : u;
     }
     if (i) dsu[i] = par[i];

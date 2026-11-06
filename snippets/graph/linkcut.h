@@ -58,7 +58,8 @@ struct LCT {
     pull(p), pull(x);
   }
   void splay(int x) {
-    vi st{x};
+    static vi st; // nodes above x in its splay, pushed top-down
+    st = {x};
     for (int y = x; !isRoot(y); y = t[y].p)
       st.push_back(t[y].p);
     for (; sz(st); st.pop_back()) push(st.back());

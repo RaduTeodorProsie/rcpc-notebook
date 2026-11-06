@@ -4,7 +4,14 @@
   python3 test.py                 build and run every tests/**/*.cpp
   python3 test.py suffix lca      only tests whose path contains one of the words
   python3 test.py --fast          no sanitizers (-O2), for quick iteration
+  python3 test.py --perf          only the performance tests (tests/perf/)
+  python3 test.py --no-perf       skip the performance tests
   python3 test.py --coverage      list C++ snippets that no test includes
+
+Performance tests (tests/perf/) are always built like a contest submission
+(-O2, no sanitizers) and run one at a time after the others, so timings are
+not disturbed. Each PERF(name, ms) block must finish within ms milliseconds
+times $PERF_SCALE (default 1; raise it on a slower machine). CI skips them.
 
 Each test is one C++ file that #includes the snippets it exercises (paths
 relative to snippets/) plus "testlib.h". It is compiled with
@@ -33,10 +40,12 @@ def gxx():
     sys.exit("no g++ found")
 
 
-def flags(fast):
+def flags(fast, perf=False):
     base = ["-std=c++20", "-g", "-Wall", "-Wextra", "-Wno-sign-compare", "-Wno-format-zero-length",
             "-include", str(ROOT / "tests/common.h"),
             "-I", str(ROOT / "snippets"), "-I", str(ROOT / "tests")]
+    if perf:
+        return base[:1] + base[2:] + ["-O2"]
     if fast:
         return base + ["-O2"]
     return base + ["-O1", "-fsanitize=address,undefined", "-fno-sanitize-recover=all",
@@ -71,9 +80,9 @@ def variants(path):
     return out
 
 
-def compile_run(path, exe, extra, deps, fast):
+def compile_run(path, exe, extra, deps, fast, perf=False):
     if not exe.exists() or exe.stat().st_mtime < max(d.stat().st_mtime for d in deps):
-        c = subprocess.run([gxx(), *flags(fast), *extra, str(path), "-o", str(exe)],
+        c = subprocess.run([gxx(), *flags(fast, perf), *extra, str(path), "-o", str(exe)],
                            capture_output=True, text=True)
         if c.returncode != 0:
             return "COMPILE", c.stderr
@@ -85,15 +94,20 @@ def compile_run(path, exe, extra, deps, fast):
     return ("ok" if r.returncode == 0 else "FAIL"), (r.stderr + r.stdout)[-3000:]
 
 
+def is_perf(path):
+    return path.relative_to(ROOT / "tests").parts[0] == "perf"
+
+
 def run_one(path, fast):
     rel = path.relative_to(ROOT / "tests")
-    exe = OUT / ("fast" if fast else "san") / rel.with_suffix("")
+    perf = is_perf(path)
+    exe = OUT / ("perf" if perf else "fast" if fast else "san") / rel.with_suffix("")
     exe.parent.mkdir(parents=True, exist_ok=True)
     t0 = time.time()
     deps = [path, ROOT / "tests/common.h", ROOT / "tests/testlib.h", *included(path)]
     vs = variants(path)
     if vs is None:
-        status, log = compile_run(path, exe, [], deps, fast)
+        status, log = compile_run(path, exe, [], deps, fast, perf)
         return rel, status, log, time.time() - t0
     for i, (name, header) in enumerate(vs):
         status, log = compile_run(path, exe.with_name(f"{exe.name}_{i}"),
@@ -143,15 +157,29 @@ def main():
     fast = "--fast" in sys.argv
     tests = sorted(p for p in (ROOT / "tests").rglob("*.cpp")
                    if not args or any(a in str(p.relative_to(ROOT / "tests")) for a in args))
+    if "--perf" in sys.argv:
+        tests = [p for p in tests if is_perf(p)]
+    if "--no-perf" in sys.argv:
+        tests = [p for p in tests if not is_perf(p)]
     if not tests:
         sys.exit("no tests matched")
     failed = 0
+
+    def report(rel, status, log, dt, show):
+        nonlocal failed
+        print(f"  {status:7} {rel}  ({dt:.1f}s)")
+        if status != "ok":
+            failed += 1
+        if status != "ok" or show:
+            print("\n".join("      " + l for l in log.strip().splitlines()[-25:]))
+
+    normal = [p for p in tests if not is_perf(p)]
     with cf.ThreadPoolExecutor(max(1, (os.cpu_count() or 2))) as ex:
-        for rel, status, log, dt in ex.map(lambda p: run_one(p, fast), tests):
-            print(f"  {status:7} {rel}  ({dt:.1f}s)")
-            if status != "ok":
-                failed += 1
-                print("\n".join("      " + l for l in log.strip().splitlines()[-25:]))
+        for res in ex.map(lambda p: run_one(p, fast), normal):
+            report(*res, show=False)
+    for p in tests:  # one at a time, so the timings are not disturbed
+        if is_perf(p):
+            report(*run_one(p, fast), show=True)
     print(f"{len(tests) - failed}/{len(tests)} passed")
     sys.exit(1 if failed else 0)
 

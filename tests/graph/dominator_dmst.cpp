@@ -40,8 +40,8 @@ int main() {
       CHECK(idom[v] == want, "it=%d v=%d got %d want %d", it, v, idom[v], want);
     }
   }
-  {  // long chain: deep recursion in the DFS and the DSU (ASan frames are big)
-    int n = 20000;
+  {  // long chain: would overflow the stack if the DFS or DSU recursed
+    int n = 200000;
     vector<vi> g(n);
     rep(i, 1, n) g[i - 1].push_back(i), g[i].push_back(i - 1);
     auto idom = dominators(g, 0);  // a path: each vertex is dominated by the previous one

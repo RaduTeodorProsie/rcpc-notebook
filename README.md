@@ -13,6 +13,7 @@ snippet is ever split across a column or a page**.
 | `python3 test.py` | run every test with ASan/UBSan (needs `g++`) |
 | `python3 test.py suffix lca` | only tests whose path matches |
 | `python3 test.py --fast` | `-O2`, no sanitizers |
+| `python3 test.py --perf` | only the performance tests (`--no-perf` skips them) |
 | `python3 test.py --coverage` | list `.h` snippets that no test includes |
 
 ## Writing a snippet
@@ -57,6 +58,20 @@ A test starting with `// variants: data-structures/lazy.h data-structures/lazyva
 is compiled once per `// == name ==` block of the fragment, with the base
 snippet's marked (`//!`) block replaced by that block; the test sees
 `VARIANT` (0, 1, ...) and includes `VARIANT_FILE`.
+
+Performance tests live in `tests/perf/` and cover the snippets whose
+running time has no quick proof: amortized or randomized structures
+(segment tree beats, link-cut tree, kinetic segment tree, directed MST,
+dominator tree, Pollard rho, minimum enclosing circle, palindromic series
+links) and algorithms far faster in practice than their bound (simplex,
+including the Klee–Minty cube; Dinic, min-cost flow, Hopcroft–Karp,
+blossom, Gomory–Hu). Each `PERF("name", ms) { ... }` block runs a
+contest-sized input, often an adversarial one, and fails if it takes longer
+than `ms` times `$PERF_SCALE` (default 1). They are built with `-O2` and no
+sanitizers, and run one at a time after the other tests. They run locally
+only, not in CI (shared runners time too unevenly). The budgets are about 3
+times the times on an Apple Silicon laptop; on a slower machine run
+`PERF_SCALE=2 python3 test.py`.
 
 Stress testing during the contest: `snippets/contest/` has one
 generator per input model (`gen_array.py`, `gen_queries.py`, `gen_string.py`,

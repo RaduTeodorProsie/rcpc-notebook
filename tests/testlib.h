@@ -53,3 +53,22 @@ inline vector<pii> rgraph(int n, int m, bool loops = false) {
       exit(1);                                                    \
     }                                                             \
   } while (0)
+
+// Performance: PERF("name", ms) { ... } runs the block once and fails if it
+// takes longer than ms milliseconds times $PERF_SCALE (default 1).
+struct PerfRun {
+  const char* name;
+  double ms;
+  chrono::steady_clock::time_point t0 = chrono::steady_clock::now();
+  bool done = false;
+  bool go() { return done ? false : (done = true); }
+  ~PerfRun() {
+    double el = chrono::duration<double, milli>(chrono::steady_clock::now() - t0).count();
+    const char* s = getenv("PERF_SCALE");
+    double lim = ms * (s ? atof(s) : 1.0);
+    printf("%-46s %8.1f ms  (limit %.0f)\n", name, el, lim);
+    fflush(stdout);
+    CHECK(el <= lim, "%s took %.1f ms, limit %.0f ms", name, el, lim);
+  }
+};
+#define PERF(name, ms) for (PerfRun perf_run_{name, ms}; perf_run_.go();)
