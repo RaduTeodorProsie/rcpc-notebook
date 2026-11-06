@@ -16,6 +16,7 @@ Snippet format (KACTL-compatible header):
   #pragma once                     (hidden)
   #include "point.h"               (hidden, shown as "Needs: point")
   ...code...                       lines ending in //! are shaded (edit here)
+                                   and left out of the hash
   // --- uses ---                  optional: everything below is the Uses block
   ...short functions built on the code above...
 
@@ -102,8 +103,10 @@ def strip_c_comments(s):
     return "".join(out)
 
 
-def code_hash(code):
-    """Same as `cpp -dD -P -fpreprocessed | tr -d '[:space:]' | md5sum | cut -c-6`."""
+def code_hash(code, marks=()):
+    """What hash.sh prints for the code typed with //! after each marked line:
+    `grep -v //! | cpp -dD -P -fpreprocessed | grep -v '^#define __' | tr -d '[:space:]' | md5sum | cut -c-6`."""
+    code = "\n".join(l for i, l in enumerate(code.split("\n"), 1) if i not in marks)
     flat = re.sub(r"\s", "", strip_c_comments(code))
     if not flat:
         return ""
@@ -157,8 +160,8 @@ def load():
                 marks=marks,
                 uses=uses,
                 uses_marks=uses_marks,
-                hash=code_hash(code) if lang == "cpp" else "",
-                uses_hash=code_hash(uses) if lang == "cpp" else "",
+                hash=code_hash(code, marks) if lang == "cpp" else "",
+                uses_hash=code_hash(uses, uses_marks) if lang == "cpp" else "",
                 needs=", ".join(pathlib.Path(n).stem for n in needs),
             )
             if lang != "typ":

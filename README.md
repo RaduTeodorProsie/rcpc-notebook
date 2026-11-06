@@ -42,8 +42,10 @@ snippet is ever split across a column or a page**.
   their own (Mo's main loop, the lazy segment tree variants); tests
   `#include` them or swap them in (see below).
 - The 6-character hash next to each title is
-  `cpp -dD -P -fpreprocessed | tr -d '[:space:]' | md5sum | cut -c-6`
-  of the printed code, so a typed copy can be checked with `hash.sh`;
+  `grep -v //! | cpp -dD -P -fpreprocessed | grep -v '^#define __' | tr -d '[:space:]' | md5sum | cut -c-6`
+  of the printed code without its shaded (`//!`) lines, so a typed copy
+  can be checked with `hash.sh` as long as the shaded lines end in `//!`
+  there too (then they can be edited without changing the hash);
   `sh hash.sh sol.cpp 40 75` hashes only lines 40–75 of a bigger file,
   and in Vim `\h` on a visual selection does the same (`vimrc.vim`).
 
