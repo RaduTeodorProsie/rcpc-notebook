@@ -1,4 +1,4 @@
-#include "number-theory/fft.h"
+#include "convolution/fft.h"
 #include "testlib.h"
 int main() {
   rep(it, 0, 200) {

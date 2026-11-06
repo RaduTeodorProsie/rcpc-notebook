@@ -73,7 +73,12 @@ int longestCommon(SAM& a, const string& t) {
   }
   return best;
 }
-string kthDistinct(SAM& a, ll k) { // 1-based, k <= distinct
+// k-th (1-based) distinct substring in sorted order.
+// paths[v] = strings readable from v, the empty one too =
+// distinct substrings that extend the prefix built so far.
+// At each step try letters in order: skip c (k -= paths)
+// while its subtree is too small, else take c (k -= 1).
+string kthDistinct(SAM& a, ll k) { // k <= distinct
   vector<ll> paths(sz(a.len), -1);
   auto dfs = [&](auto& self, int v) -> ll {
     if (paths[v] >= 0) return paths[v];

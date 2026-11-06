@@ -17,7 +17,4 @@
   [Solids], [sphere $4/3 pi r^3$, area $4 pi r^2$; cone $pi r^2 h\/3$; cap of height $h$: $pi h^2 (3r - h)\/3$],
   [Sphere dist.], [$r arccos(sin phi_1 sin phi_2 + cos phi_1 cos phi_2 cos(lambda_1 - lambda_2))$, $phi$ latitude, $lambda$ longitude],
   [Planar graph], [$V - E + F = 1 + C$ ($C$ components, $F$ counts the outer face), #h(3pt) $E <= 3V - 6$],
-  sec[Probability],
-  [Expectation], [$E[X] = sum_(k>=1) P(X >= k)$ for $X in NN$; success with prob. $p$ needs $1\/p$ tries on average],
-  [Coupons], [drawing until all $n$ kinds are seen: $n H_n approx n ln n$ draws],
 )

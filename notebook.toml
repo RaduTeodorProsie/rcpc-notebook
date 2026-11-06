@@ -25,24 +25,35 @@ name = "Contest"
 dir = "contest"
 files = ["template.cpp", "hash.sh", "stresstutorial.typ", "stress.sh", "gen_array.py",
          "gen_queries.py", "gen_string.py", "gen_tree.py", "gen_graph.py",
-         "speedup.cpp", "troubleshoot.typ"]
+         "speedup.cpp", "vimrc.vim", "troubleshoot.typ"]
 
 [[chapter]]
 name = "Mathematics"
 dir = "math"
-files = ["combinatorics.typ", "formulas.typ", "theorems.typ", "numbers.typ"]
+files = ["sums.typ", "combinatorics.typ", "formulas.typ", "probability.typ", "theorems.typ", "numbers.typ"]
 
 [[chapter]]
 name = "Number theory and algebra"
 dir = "number-theory"
-files = ["modint.h", "crt.h", "millerrabin.h", "pollard.h", "dlog.h", "ntt.h",
-         "stirling.h", "fft.h", "gauss.h", "det.h", "xorbasis.h", "floorsum.h"]
+files = ["modint.h", "crt.h", "millerrabin.h", "pollard.h", "dlog.h", "sqrtmod.h",
+         "gauss.h", "det.h", "xorbasis.h", "floorsum.h"]
+
+[[chapter]]
+name = "Convolutions and polynomials"
+dir = "convolution"
+files = ["fft.h", "ntt.h", "+poly.h", "stirling.h", "berlekamp.h", "subsets.h",
+         "supersets.h", "xorT.h", "subsetconv.h", "divisors.h", "multiples.h"]
+
+[[chapter]]
+name = "Numerical"
+dir = "numerical"
+files = ["ternary.h", "simpson.h", "fracsearch.h", "simplex.h"]
 
 [[chapter]]
 name = "Data structures"
 dir = "data-structures"
 files = ["dsu.h", "rollback.h", "dyncon.h", "fenwick.h", "segtree.h", "lazy.h",
-         "+lazyvar.frag", "beats.h", "pst.h", "treap.h", "sparsetable.h", "lichao.h", "cht.h", "staircase.h", "pbds.h",
+         "+lazyvar.frag", "beats.h", "kst.h", "pst.h", "treap.h", "sparsetable.h", "lichao.h", "cht.h", "staircase.h", "pbds.h",
          "mo.frag"]
 
 [[chapter]]
@@ -50,7 +61,7 @@ name = "Graphs"
 dir = "graph"
 files = ["spfa.h", "dinic.h", "mcmf.h", "hopcroft.h", "hungarian.h", "blossom.h", "scc.h",
          "twosat.h", "lowlink.h", "euler.h", "lca.h", "hld.h", "hldorder.h", "virtualtree.h",
-         "centroid.h"]
+         "centroid.h", "linkcut.h", "dominator.h", "dmst.h", "mincut.h"]
 
 [[chapter]]
 name = "Strings"
@@ -68,12 +79,9 @@ files = ["point.h", "lines.h", "angle.h", "polygon.h", "polycut.h", "hull.h",
 [[chapter]]
 name = "Dynamic programming"
 dir = "dp"
-files = ["dcopt.h", "knuth.h", "lis.h", "aliens.h", "slope.h", "subsets.h",
-         "supersets.h", "xorT.h", "divisors.h", "multiples.h"]
+files = ["dcopt.h", "knuth.h", "lis.h", "aliens.h", "slope.h"]
 
 [[chapter]]
 name = "Techniques"
 dir = "techniques"
-files = ["counting.typ", "genfunc.typ", "expected.typ", "random.typ", "games.typ",
-         "matrix.h", "offline.typ", "parallelbs.h", "sqrt.typ", "splitrebuild.h",
-         "greedy.typ", "dptech.typ", "graphtricks.typ", "fracturing.typ"]
+files = ["matrix.h", "parallelbs.h", "splitrebuild.h"]

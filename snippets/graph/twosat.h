@@ -3,9 +3,14 @@
  * Description: Variables $0..n-1$; a literal is `x` or `~x`
  *   (negation). Constraints: `either(a, b)` ($a or b$),
  *   `implies`, `force(a)` ($a$ true), `same` ($a = b$), `differ`
- *   ($a != b$, xor), `atMostOne(lits)` (adds helper variables).
- *   Not 2-SAT: "at least one of 3+ literals". `solve` fills
- *   `val` with a satisfying assignment or returns false.
+ *   ($a != b$, xor), `atMostOne(lits)`. Not 2-SAT: "at least one
+ *   of 3+ literals". `solve` fills `val` with a satisfying
+ *   assignment or returns false; $x$ is true iff its component
+ *   comes after $not x$ in topological order. `atMostOne` with
+ *   $O(k)$ clauses (pairwise would be $O(k^2)$): a new variable
+ *   $p_i$ means "one of $l_0..l_i$ is true", with $l_i => p_i$,
+ *   $p_(i-1) => p_i$ and $p_(i-1) => not l_i$ (once one is true,
+ *   all later ones are false). Exactly one of 3+: not 2-SAT.
  * Time: $O(n + m)$
  * Usage: TwoSat s(n); s.either(a, ~b); s.solve(val);
  */

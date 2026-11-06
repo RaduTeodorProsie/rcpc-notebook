@@ -1,8 +1,8 @@
-#include "dp/subsets.h"
-#include "dp/supersets.h"
-#include "dp/xorT.h"
-#include "dp/divisors.h"
-#include "dp/multiples.h"
+#include "convolution/subsets.h"
+#include "convolution/supersets.h"
+#include "convolution/xorT.h"
+#include "convolution/divisors.h"
+#include "convolution/multiples.h"
 #include "testlib.h"
 using V = vector<ll>;
 V convolve(V a, V b, void (*T)(V&, bool)) {

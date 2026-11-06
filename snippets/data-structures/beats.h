@@ -47,6 +47,7 @@ struct Beats {
     c.mn2 = min(a.mn == c.mn ? a.mn2 : a.mn,
                 b.mn == c.mn ? b.mn2 : b.mn);
   }
+
   // k = 0: chmin, 1: chmax, 2: add; tag condition must hold
   void tag(int x, int k, ll v) {
     N& a = t[x];

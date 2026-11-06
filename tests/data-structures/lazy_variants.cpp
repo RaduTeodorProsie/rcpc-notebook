@@ -1,4 +1,5 @@
 // variants: data-structures/lazy.h data-structures/lazyvar.frag
+const ll MOD = 998244353;  // the affine block uses the global MOD
 #include VARIANT_FILE
 #include "testlib.h"
 int main() {

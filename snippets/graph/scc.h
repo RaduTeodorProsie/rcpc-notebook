@@ -1,7 +1,10 @@
 /**
  * Name: Strongly connected components
- * Description: Tarjan. `comp[v]` is the component of $v$;
- *   components are numbered in reverse topological order.
+ * Description: Tarjan. `comp[v]` is the component of $v$,
+ *   numbered bottom-up (reverse topological order): component $0$
+ *   is a sink, and an edge $u -> v$ between components always has
+ *   `comp[u] > comp[v]`. So a DP over the condensation that needs
+ *   the successors first just runs $0, 1, 2, dots$
  * Time: $O(V + E)$
  */
 #pragma once

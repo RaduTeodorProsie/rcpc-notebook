@@ -19,7 +19,8 @@ Snippet format (KACTL-compatible header):
   // --- uses ---                  optional: everything below is the Uses block
   ...short functions built on the code above...
 
-Shell/Python files use leading `# Key: value` lines, .typ files `// Name: ...`.
+Shell/Python files use leading `# Key: value` lines, .typ files `// Name: ...`,
+.vim files `" Name: ...`.
 """
 import hashlib
 import json
@@ -35,7 +36,7 @@ import tomllib
 ROOT = pathlib.Path(__file__).resolve().parent
 BUILD = ROOT / "build"
 LANG = {".cpp": "cpp", ".h": "cpp", ".hpp": "cpp", ".frag": "cpp", ".sh": "bash", ".py": "python",
-        ".typ": "typ"}  # .frag: C++ fragment (not compiled on its own)
+        ".typ": "typ", ".vim": "vim"}  # .frag: C++ fragment (not compiled on its own)
 FIELDS = {"name", "description", "time", "memory", "usage", "needs", "status",
           "author", "date", "source", "license"}
 SHOWN = ["name", "description", "time", "memory", "usage"]
@@ -70,7 +71,7 @@ def split_header(path, text):
             return {}, text
         lines = [re.sub(r"^\s*\* ?", "", l) for l in m.group(1).splitlines()]
         return parse_fields(lines), text[m.end():]
-    prefix = "//" if ext == ".typ" else "#"
+    prefix = {".typ": "//", ".vim": '"'}.get(ext, "#")
     lines = text.splitlines(keepends=True)
     head = []
     while lines and lines[0].startswith(prefix) and not lines[0].startswith("#!"):
@@ -222,6 +223,11 @@ def main():
           + (f", lowest {st['min_fill']:.0%} (column {st['min_col']})" if st['columns'] > 1 else ""))
     if st["pages"] > 25:
         print(f"warning: {st['pages']} pages, the limit is 25")
+    if st["overflow"]:
+        print(f"error: column(s) {', '.join(st['overflow'])} overflow and get clipped; "
+              "add blank lines (split points) to the snippet or shorten it")
+        if "--check" in sys.argv:
+            sys.exit(1)
     if "--png" in sys.argv:
         for old in BUILD.glob("page-*.png"):
             old.unlink()

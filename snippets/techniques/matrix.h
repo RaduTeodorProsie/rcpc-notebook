@@ -1,7 +1,7 @@
 /**
  * Name: Matrix power
- * Description: `mpow(A, e)` is $A^e$ modulo `MM`; entries must be
- *   in $[0, M M)$ (write $-c$ as $M M - c$). Linear recurrence
+ * Description: `mpow(A, e)` is $A^e$ modulo `MOD`; entries must be
+ *   reduced mod `MOD` (write $-c$ as `MOD` $- c$). Linear recurrence
  *   $a_n = c_1 a_(n-1) + dots + c_k a_(n-k)$: the state
  *   $(a_(n-1), dots, a_(n-k))$ times the companion matrix (first row
  *   $c_1..c_k$, then $1$s just below the diagonal) gives the next
@@ -16,12 +16,12 @@
  */
 #pragma once
 using Mat = vector<vector<ll>>;
-const ll MM = 1000000007; //!
+const ll MOD = 1000000007; //!
 Mat mul(const Mat& a, const Mat& b) {
   int n = sz(a), k = sz(b), m = sz(b[0]);
   Mat c(n, vector<ll>(m));
   rep(i, 0, n) rep(l, 0, k) if (a[i][l]) rep(j, 0, m)
-    c[i][j] = (c[i][j] + a[i][l] * b[l][j]) % MM;
+    c[i][j] = (c[i][j] + a[i][l] * b[l][j]) % MOD;
   return c;
 }
 Mat mpow(Mat a, ll e) {

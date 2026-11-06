@@ -22,7 +22,9 @@ struct LiChao {
   LiChao(int lo, int hi) : lo(lo), hi(hi),
       t(4 * (hi - lo), Line{0, LLONG_MIN / 2}) {}
   void add(Line ln) { add(ln, 1, lo, hi); }
-  void addSeg(Line ln, int a, int b) { seg(ln, a, b, 1, lo, hi); }
+  void addSeg(Line ln, int a, int b) {
+    seg(ln, a, b, 1, lo, hi);
+  }
   void seg(Line ln, int a, int b, int x, int l, int r) {
     if (b <= l || r <= a) return;
     if (a <= l && r <= b) return add(ln, x, l, r);

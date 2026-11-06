@@ -22,6 +22,13 @@
   - Stack overflow from deep recursion.
   - Division by zero, `sqrt` or `log` of a negative.
   - Iterators invalidated by `push_back`/`erase`.
+  - `-D_GLIBCXX_DEBUG`: checked `[]` and iterators.
+  - Is it a crash? First line of `main`: \
+    `signal(SIGSEGV, [](int) { _Exit(0); });` \
+    turns it into WA (also `SIGFPE`, `SIGABRT`).
+  - NaN or $plus.minus infinity$? `feenableexcept(FE_INVALID |` \
+    `FE_DIVBYZERO | FE_OVERFLOW)` crashes at the first one
+    (Linux only).
 ], [
   #hd[Time or memory limit]
   - Infinite loop? Complexity really ok?

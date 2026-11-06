@@ -1,11 +1,9 @@
 /**
  * Name: Number theoretic transform
- * Description: `conv<M>(a, b)` multiplies the polynomials with
- *   coefficient vectors $a$ and $b$ modulo $M$:
- *   $c_k = sum_(i+j=k) a_i b_j$, size $|a| + |b| - 1$. $M$ must be
- *   $c dot 2^k + 1$ with primitive root $3$ and $2^k >= |a| + |b|$:
+ * Description: `conv<M>(a, b)`: $c_k = sum_(i+j=k) a_i b_j$ mod an
+ *   NTT prime $M = c dot 2^k + 1$ with root $3$, $2^k >= |a| + |b|$:
  *   $998244353$ ($k = 23$), $167772161$ ($25$), $469762049$ ($26$).
- *   Any other modulus: `convMod`.
+ *   `convMod`: any modulus $m < 2^31$.
  * Usage: vector<ll> c = conv<998244353>(a, b);
  *   vector<ll> d = convMod(a, b, 1000000007);
  * Time: $O(n log n)$, `convMod` about 3 times slower
@@ -59,12 +57,8 @@ vector<ll> conv(vector<ll> a, vector<ll> b) {
   return a;
 }
 // --- uses ---
-// Any m < 2^31, entries in [0, m). The true integer c_k is
-// below n m^2 < P0 P1 P2 ~ 7.8e25 (for n < 1e7), so its
-// residues x, y, z mod P0, P1, P2 determine it (CRT).
-// Garner: t1 = (y - x) / P0 mod P1, then v01 = x + P0 t1 is
-// c_k mod P0 P1; t2 = (z - v01) / (P0 P1) mod P2, then
-// c_k = v01 + P0 P1 t2. Reduce mod m only at the end.
+// Entries in [0, m). The exact c_k < n m^2 < P0 P1 P2 is
+// rebuilt from its residues x, y, z (CRT, Garner).
 vector<ll> convMod(const vector<ll>& a, const vector<ll>& b,
                    ll m) {
   const int P0 = 998244353, P1 = 167772161, P2 = 469762049;
@@ -77,7 +71,7 @@ vector<ll> convMod(const vector<ll>& a, const vector<ll>& b,
     ll t1 = (y[i] - x[i] % P1 + P1) % P1 * i01 % P1;
     ll v01 = x[i] + P0 * t1; // exact value mod P0*P1
     ll t2 = (z[i] - v01 % P2 + P2) % P2 * i012 % P2;
-    r[i] = (v01 % m + (__int128)P0 * P1 % m * t2) % m;
+    r[i] = (v01 % m + (ll)P0 * P1 % m * t2) % m;
   }
   return r;
 }

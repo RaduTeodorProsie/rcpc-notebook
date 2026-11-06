@@ -1,6 +1,7 @@
 /**
  * Name: Miller-Rabin
- * Description: Deterministic primality test for all 64-bit
+ * Description: *Needs `__int128`* (64-bit products in `mulm`).
+ *   Deterministic primality test for all 64-bit
  *   integers. `powm` is modular power for any modulus.
  * Time: $7$ modular exponentiations
  */

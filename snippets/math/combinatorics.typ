@@ -2,9 +2,6 @@
 #import "/snippets/sheet.typ": sec
 #table(
   columns: (auto, 1fr), stroke: none, inset: (x: 2pt, y: 1.8pt),
-  sec[Sums],
-  [Powers], [$sum_(i=1)^n i^2 = n(n+1)(2n+1)\/6$, #h(3pt) $sum_(i=1)^n i^3 = (n(n+1)\/2)^2$],
-  [Geometric], [$sum_(i=0)^(n-1) r^i = (r^n - 1)\/(r - 1)$, #h(3pt) $sum_(i>=0) i r^i = r\/(1-r)^2$],
   sec[Counting],
   [Vandermonde], [$sum_k binom(m, k) binom(n, r-k) = binom(m+n, r)$],
   [Hockey stick], [$sum_(i=r)^n binom(i, r) = binom(n+1, r+1)$],
@@ -12,14 +9,17 @@
   [Catalan $C_n$], [balanced bracket strings with $n$ pairs (also binary trees with $n$ nodes, triangulations of an $(n+2)$-gon): $C_n = binom(2n, n)\/(n+1)$, $C_(n+1) = sum_i C_i C_(n-i)$],
   [Stirling 1 \ $c(n,k)$], [permutations of $n$ elements with exactly $k$ cycles. Element $n$ is a cycle alone, or is inserted right after one of the other $n - 1$: $c(n,k) = c(n-1,k-1) + (n-1) c(n-1,k)$. Signed: $s(n,k) = (-1)^(n-k) c(n,k)$],
   [Stirling 2 \ $S(n,k)$], [ways to split $n$ labelled items into $k$ non-empty groups, where the groups have no names or order ({1,2},{3} is the same as {3},{1,2}). Item $n$ is a group alone, or joins one of the $k$ groups of a split of the rest: $S(n,k) = S(n-1,k-1) + k S(n-1,k)$. \ Closed form: give the groups names $1..k$; that gives $k! S(n,k)$ onto maps (every name used). Count maps $n -> k$ that miss a chosen set of $i$ names, $(k-i)^n$, and use incl.–excl. over that set: $k! S(n,k) = sum_(i=0)^k (-1)^i binom(k,i)(k-i)^n$],
+  [Eulerian \ $A(n,k)$], [permutations of $n$ with exactly $k$ ascents ($pi_i < pi_(i+1)$). Insert $n$ into a permutation of $n - 1$: in an ascent or at the end keeps the count, elsewhere adds one: $A(n,k) = (k+1) A(n-1,k) + (n-k) A(n-1,k-1)$. $A(n,k) = sum_(j=0)^k (-1)^j binom(n+1, j)(k+1-j)^n$, #h(2pt) $sum_k A(n,k) binom(x+k, n) = x^n$],
   [Bell $B_n$], [ways to split $n$ labelled items into any number of non-empty groups: $B_n = sum_k S(n,k)$, $B_(n+1) = sum_k binom(n, k) B_k$],
   [Derangements], [permutations without fixed points: $D_n = (n-1)(D_(n-1) + D_(n-2)) = n! sum_(i=0)^n (-1)^i \/ i!$],
-  [Partitions $p(n)$], [ways to write $n$ as an unordered sum of positive integers: $p(n) = sum_(k != 0) (-1)^(k+1) p(n - k(3k-1)\/2)$, $k = plus.minus 1, plus.minus 2, dots$],
+  [Partitions $p(n)$], [ways to write $n$ as an unordered sum of positive integers; $p(0) = 1$, \
+    $p(n) = p(n-1) + p(n-2) - p(n-5) - p(n-7) + p(n-12) + p(n-15) - dots$: \
+    subtract the pentagonal numbers $1, 2, 5, 7, 12, 15, 22, 26, dots$ ($k(3k-1)\/2$ for $k = 1, -1, 2, -2, dots$), signs in pairs $+ + - - + + dots$, stop when one exceeds $n$],
   [Incl.–excl.], [$|union.big A_i| = sum_(S != emptyset) (-1)^(|S|+1) |inter.big_(i in S) A_i|$],
   sec[Fast computation],
   [Small tables], [all $S$, $c$, $binom(n, k)$ for $n, k <= N$: fill the recurrences row by row, $O(N^2)$; $binom(n, k)$ for one query: precompute $n!$ and $1\/n!$ in $O(N)$],
   [$S(n, 0..n)$], [one row in $O(n log n)$. Divide the closed form by $k!$ and write $binom(k,i)\/k! = 1\/(i!(k-i)!)$: $S(n,k) = sum_(i+j=k) (-1)^i \/ i! dot j^n \/ j!$. That is the product of the polynomials with coefficients $a_i = (-1)^i\/i!$ and $b_j = j^n\/j!$, coefficient $k$: one NTT, `stirling2`],
   [$c(n, 0..n)$], [one row in $O(n log^2 n)$: $sum_k c(n,k) x^k = x(x+1) dots (x+n-1)$. Multiply the $n$ factors as a balanced tree: split them into two halves, multiply each half recursively, then the two results with one NTT: `stirling1`],
   [$B_n$], [one $n$: sum the row $S(n, dot)$, $O(n log n)$. All $B_0..B_N$: the Bell triangle, $O(N^2)$: row $0$ is $1$; each row starts with the last entry of the row above, and each next entry is its left neighbour plus the entry above that neighbour. The first entry of row $n$ is $B_n$. Mod a small prime $p$: $B_(n+p) equiv B_n + B_(n+1)$],
-  [$p(0..n)$], [$O(n sqrt(n))$: compute $p(0), p(1), dots$ in order; each uses the recurrence above, which has only the $O(sqrt(n))$ terms with $k(3k-1)\/2 <= n$. Signs by $k = 1, -1, 2, -2, dots$: $+, +, -, -, +, +, dots$. Partitions into parts $<= m$: knapsack $O(n m)$],
+  [$p(0..n)$], [$O(n sqrt(n))$: fill $p(0), p(1), dots$ in order with the recurrence above, $O(sqrt(n))$ terms each. Partitions into parts $<= m$: knapsack $O(n m)$],
 )

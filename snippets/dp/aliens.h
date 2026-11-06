@@ -1,18 +1,18 @@
 /**
  * Name: Lagrangian relaxation (Aliens)
- * Description: For "minimum cost using exactly $k$ items (groups,
- *   segments, ...)" when $"opt"(k)$ is convex in $k$ (its
- *   differences grow; check with a brute force). Remove the
- *   limit and charge $lambda$ per item instead: $g(lambda) =
- *   min_j ("opt"(j) + lambda j)$ is a DP without the $k$
- *   dimension. A larger $lambda$ means fewer items. `solve(l)`
- *   returns (cost including $l$ per item, items), taking the
- *   fewest items among equal costs; the binary search finds the
- *   smallest $lambda$ with at most $k$ items, and then
- *   $"opt"(k) = g(lambda) - lambda k$, also when the DP used fewer
- *   (those counts tie with $k$ at this $lambda$). Needs integer
- *   costs; $[l o, h i]$ must contain $-C..C$ where $C$ exceeds every
- *   $|"opt"(j) - "opt"(j-1)|$. Maximum: negate the costs.
+ * Description: Min cost with exactly $k$ items. `solve(l)` returns
+ *   ($g(l)$, count): the min cost when each item costs $l$ extra,
+ *   and its number of items, *ties broken towards fewer items*
+ *   (compare (cost, count) pairs). Caveats: \
+ *   – $"opt"(k)$ must be convex in $k$: check with a brute force. \
+ *   – Return $g(lambda) - lambda k$ with the target $k$, not with
+ *   the count `solve` reports: at the final $lambda$ several counts
+ *   tie, and the reported one can be smaller than $k$. \
+ *   – At most / at least $k$: if the optimum with no limit
+ *   ($lambda = 0$) obeys the bound, it is the answer; otherwise the
+ *   best uses exactly $k$. \
+ *   – Integer costs; $[l o, h i]$ must contain $-C..C$, $C$ above
+ *   every $|"opt"(j) - "opt"(j-1)|$. Maximum: negate the costs.
  * Time: $O(log C)$ calls to `solve`
  */
 #pragma once

@@ -1,6 +1,7 @@
 /**
  * Name: Extended Euclid and CRT
- * Description: `euclid` finds $x, y$ with $a x + b y = gcd(a, b)$.
+ * Description: *Needs `__int128`* (`crt`: $t m$ can exceed
+ *   $2^63$). `euclid` finds $x, y$ with $a x + b y = gcd(a, b)$.
  *   `crt` solves $x equiv a space (mod m)$, $x equiv b space (mod n)$,
  *   returning $(x, op("lcm")(m, n))$ with $0 <= x < op("lcm")$, or
  *   $(-1, -1)$. Fold it over a list for more congruences.

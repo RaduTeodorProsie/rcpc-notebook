@@ -10,7 +10,7 @@ int main() {
     vector<ll> seq = a;  // seq[i] = a_i for i < k
     while (sz(seq) <= n + k) {
       ll v = 0;
-      rep(j, 0, k) v = (v + c[j] * seq[sz(seq) - 1 - j]) % MM;
+      rep(j, 0, k) v = (v + c[j] * seq[sz(seq) - 1 - j]) % MOD;
       seq.push_back(v);
     }
     Mat T(k, vector<ll>(k));

@@ -24,24 +24,24 @@ DAG $= n -$ max matching between left copies and right copies ($u -> v$
 edge gives $u_L - v_R$); take the transitive closure first if paths may
 share vertices. Dually (Mirsky): longest chain $=$ fewest antichains.]
 
-#t[Matrix-tree][The number of spanning trees is the determinant of the
-Laplacian $L = D - A$ with any one row and column removed. Directed,
-rooted at $r$ (edges away from $r$): use in-degrees, remove row and column $r$.]
+#t[Matrix-tree][Number of spanning trees of a multigraph: $L_(v v)
+= deg v$, $L_(u v) = -$(number of edges $u v$), loops ignored. Delete the
+row and column of any one vertex; the answer is $det$ (`det`, mod a
+prime). Edge weights instead of counts give the sum over spanning trees
+of the product of weights. Directed trees with all edges pointing away
+from $r$: $L_(v v)$ = in-degree, $L_(u v) = -$(edges $u -> v$); delete
+row and column $r$.]
 
-#t[LGV][Counts families of paths that do not touch. Take a DAG with
-sources $a_1, dots, a_k$ and sinks $b_1, dots, b_k$, and let
-$M_(i j)$ be the number of paths $a_i -> b_j$ (or the sum over those
-paths of the product of edge weights). Then $det M$ equals the sum, over
-all families of $k$ pairwise vertex-disjoint paths $a_i -> b_(sigma(i))$, of
-$"sign"(sigma)$. Reason: in a family where two paths share a vertex, swap
-their tails after the first shared vertex; this pairs such families with
-opposite signs, so they cancel. Use: when the geometry forces
-$sigma = "id"$, $det M$ is exactly the number of disjoint families. This holds
-on a grid when sources and sinks lie on the border in the same order.
-For example, for $k = 2$ the count is $M_(1 1) M_(2 2) - M_(1 2) M_(2 1)$; on a grid
-$M_(i j) = binom(Delta x + Delta y, Delta x)$. Two paths $(0,0) -> (n,m)$
-that meet only at the ends: sources $(0,1), (1,0)$, sinks
-$(n-1,m), (n,m-1)$. Compute $det$ modulo a prime with `det`.]
+#t[LGV][Counts $k$-tuples of paths in a DAG (often a grid), from
+sources $a_1, dots, a_k$ to sinks $b_1, dots, b_k$, that share no vertex.
+Build $M_(i j)$ = number of paths $a_i -> b_j$ (grid:
+$binom(Delta x + Delta y, Delta x)$); the answer is $det M$ (`det`). Valid
+when disjoint paths can only join $a_i$ to $b_i$: on a grid, sources and
+sinks on the border in the same order. In general
+$det M = sum_sigma "sign"(sigma) dot$(disjoint tuples joining $a_i$ to
+$b_(sigma(i))$). Example: two paths
+$(0,0) -> (n,m)$ meeting only at the ends = disjoint paths from
+$(0,1), (1,0)$ to $(n-1,m), (n,m-1)$: $M_(1 1) M_(2 2) - M_(1 2) M_(2 1)$.]
 
 #t[Sprague–Grundy][A position's Grundy value is the mex of the values of
 the positions reachable in one move. A sum of independent games is lost

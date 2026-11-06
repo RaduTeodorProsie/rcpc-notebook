@@ -36,13 +36,15 @@ snippet is ever split across a column or a page**.
   print order, except that the packer may swap a snippet with one of the
   next `layout.window` snippets to avoid gaps (`window = 1` forbids it).
 - `.typ` files (formula sheets, guides) are included as Typst content.
+- `.sh`/`.py` files use `# Name:` header lines, `.vim` files `" Name:`.
 - `.frag` files are C++ fragments printed like code but not compiled on
   their own (Mo's main loop, the lazy segment tree variants); tests
   `#include` them or swap them in (see below).
 - The 6-character hash next to each title is
   `cpp -dD -P -fpreprocessed | tr -d '[:space:]' | md5sum | cut -c-6`
   of the printed code, so a typed copy can be checked with `hash.sh`;
-  `sh hash.sh sol.cpp 40 75` hashes only lines 40–75 of a bigger file.
+  `sh hash.sh sol.cpp 40 75` hashes only lines 40–75 of a bigger file,
+  and in Vim `\h` on a visual selection does the same (`vimrc.vim`).
 
 ## Tests
 
@@ -67,7 +69,9 @@ generator per input model (`gen_array.py`, `gen_queries.py`, `gen_string.py`,
 packs columns one at a time. Each column gets the next snippet plus the
 subset of the next few that fills it best, and a gap a snippet doesn't fit
 is filled by a later one. A snippet taller than a whole column first moves
-its Uses block to its own box, and only then is cut at a blank line.
+its Uses block to its own box, and only then is cut at a blank line. A
+snippet with no blank line that is still too tall would run off the page,
+so `build.py` reports any column that overflows (and `--check` fails).
 Columns are labelled `1a`, `1b`, ... and the contents page points to them.
 
 Fonts: JetBrains Mono NL is bundled in `fonts/` (OFL). Titles use

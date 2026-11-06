@@ -59,7 +59,8 @@
 
 #let hash-tag(h) = text(font: mono, size: 5.5pt, weight: "bold", h)
 
-#let snippet(it, part: 0, code: none, uses: true, off: 0) = {
+// `last`: this box holds the end of the code, so it gets the Usage line.
+#let snippet(it, part: 0, code: none, uses: true, off: 0, last: true) = {
   let code = if code == none { it.code } else { code }
   let uses = uses and it.at("uses", default: "") != ""
   let title = text(font: sans, weight: "bold", size: title-size, it.title)
@@ -79,12 +80,10 @@
     if it.memory != "" { facts.push([#key("Memory") #h(1.5pt) #md(it.memory)]) }
     if it.needs != "" { facts.push([#key("Needs") #h(1.5pt) #raw(it.needs)]) }
     if facts.len() > 0 { body.push(facts.join(h(9pt))) }
-    if it.usage != "" {
-      body.push(grid(
-        columns: (auto, 1fr), column-gutter: 4pt, align: (left + horizon, left),
-        key("Usage"), raw(it.usage, lang: it.lang, block: true),
-      ))
-    }
+  }
+  let usage = if last and code != "" and it.usage != "" {
+    grid(columns: (auto, 1fr), column-gutter: 4pt, align: (left + horizon, left),
+      key("Usage"), raw(it.usage, lang: it.lang, block: true))
   }
   block(width: 100%, breakable: false, {
     grid(columns: (1fr, auto), column-gutter: 4pt, align: (left + bottom, right + bottom), title, tag)
@@ -99,6 +98,10 @@
       include (it.path)
     } else if code != "" {
       listing(code, it.lang, it.marks, off: off)
+    }
+    if usage != none {
+      v(2.6pt)
+      usage
     }
     if uses {
       if code != "" { v(3.5pt) }
@@ -124,12 +127,12 @@
   v(5pt)
   line(length: 100%, stroke: 0.7pt)
   for (ci, ch) in chapters.enumerate() {
-    v(5.5pt)
+    v(4pt)
     text(font: sans, weight: "bold", size: 6.5pt, tracking: 0.06em)[#(ci + 1) #h(2pt) #upper(ch.name)]
-    v(2.5pt)
+    v(1.5pt)
     let cells = ch.items.enumerate().map(((ii, it)) => [#it.title #box(width: 1fr,
       repeat(text(fill: luma(175))[.#h(1.2pt)])) #lbl(str(ci) + "-" + str(ii))])
-    grid(columns: (1fr, 1fr), column-gutter: 9pt, row-gutter: 2.4pt, ..cells)
+    grid(columns: (1fr, 1fr), column-gutter: 9pt, row-gutter: 1.7pt, ..cells)
   }
 }
 
@@ -157,9 +160,9 @@
   for (ci, ch) in chapters.enumerate() {
     let us = ()
     for (ii, it) in ch.items.enumerate() {
-      let unit(part, code, uses, off, pinned, brk) = (
-        ci: ci, ii: ii, part: part, code: code, uses: uses, off: off,
-        h: mh(snippet(it, part: part, code: code, uses: uses, off: off)),
+      let unit(part, code, uses, off, pinned, brk, last: true) = (
+        ci: ci, ii: ii, part: part, code: code, uses: uses, off: off, last: last,
+        h: mh(snippet(it, part: part, code: code, uses: uses, off: off, last: last)),
         pinned: pinned, brk: brk, extra: (),
       )
       let start = us.len()
@@ -184,9 +187,11 @@
       if cur.len() > 0 { segs.push(cur) }
       let parts = ()
       let acc = ()
-      for s in segs {
+      for (si, s) in segs.enumerate() {
         let trial = acc + s
-        if acc.len() > 0 and mh(snippet(it, part: parts.len(), code: trial.join("\n").trim("\n"), uses: false)) > cap {
+        // a part shows the Usage line iff it holds the last segment
+        if acc.len() > 0 and mh(snippet(it, part: parts.len(), code: trial.join("\n").trim("\n"),
+            uses: false, last: si == segs.len() - 1)) > cap {
           parts.push(acc)
           acc = s
         } else { acc = trial }
@@ -194,7 +199,8 @@
       parts.push(acc)
       let off = 0
       for (pi, p) in parts.enumerate() {
-        us.push(unit(pi, p.join("\n").trim("\n"), false, off, true, pi < parts.len() - 1))
+        us.push(unit(pi, p.join("\n").trim("\n"), false, off, true, pi < parts.len() - 1,
+          last: pi == parts.len() - 1))
         off += p.len()
       }
       if has-uses { us.push(unit(parts.len(), "", true, 0, true, false)) }
@@ -297,7 +303,8 @@
     else {
       for (j, u) in ((e,) + e.at("extra", default: ())).enumerate() {
         if j > 0 { v(gap) }
-        snippet(chapters.at(u.ci).items.at(u.ii), part: u.part, code: u.code, uses: u.uses, off: u.off)
+        snippet(chapters.at(u.ci).items.at(u.ii), part: u.part, code: u.code, uses: u.uses, off: u.off,
+          last: u.at("last", default: true))
       }
     }
   }
@@ -358,6 +365,8 @@
     fill: inner.sum() / inner.len(),
     min_fill: mn,
     min_col: col-label(inner.position(f => f == mn)),
+    // columns taller than the page (past the bottom margin): the end is cut off
+    overflow: range(cols.len()).filter(k => fills.at(k) > 1.02).map(col-label),
   )) <stats>]
 
   let sep = align(center, line(angle: 90deg, length: col-h, stroke: 0.3pt + luma(190)))

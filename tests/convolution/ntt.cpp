@@ -1,4 +1,4 @@
-#include "number-theory/ntt.h"
+#include "convolution/ntt.h"
 #include "testlib.h"
 vector<__int128> naive(const vector<ll>& a, const vector<ll>& b) {
   if (a.empty() || b.empty()) return {};
