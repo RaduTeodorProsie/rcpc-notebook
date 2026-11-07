@@ -105,7 +105,10 @@
     }
     if uses {
       if code != "" { v(3.5pt) }
-      grid(columns: (1fr, auto), align: (left + bottom, right + bottom), key("Uses"), hash-tag(it.uses_hash))
+      let head = if it.uses_needs != "" {
+        [#key("Uses") #h(9pt) #key("Needs") #h(1.5pt) #raw(it.uses_needs)]
+      } else { key("Uses") }
+      grid(columns: (1fr, auto), align: (left + bottom, right + bottom), head, hash-tag(it.uses_hash))
       v(1.5pt)
       listing(it.uses, it.lang, it.uses_marks, dotted: true)
     }

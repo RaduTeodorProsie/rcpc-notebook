@@ -137,14 +137,15 @@ def load():
             meta, code = split_header(path, path.read_text())
             lang = LANG.get(path.suffix, "")
             needs = [x.strip() for x in meta.get("needs", "").split(",") if x.strip()]
-            uses = ""
+            uses, uses_needs = "", []
             if lang == "cpp":
                 code = re.sub(r"^\s*#pragma once[ \t]*\n", "", code, flags=re.M)
-                needs += INCLUDE_RE.findall(code)
-                code = INCLUDE_RE.sub("", code)
                 parts = USES_RE.split(code, maxsplit=1)
                 if len(parts) == 2:
                     code, uses = parts
+                needs += INCLUDE_RE.findall(code)
+                uses_needs = INCLUDE_RE.findall(uses)  # needed only by the Uses block
+                code, uses = INCLUDE_RE.sub("", code), INCLUDE_RE.sub("", uses)
             code, marks = take_marks(code.strip("\n"))
             uses, uses_marks = take_marks(uses.strip("\n"))
             item = {k: meta.get(k, "") for k in SHOWN}
@@ -163,6 +164,7 @@ def load():
                 hash=code_hash(code, marks) if lang == "cpp" else "",
                 uses_hash=code_hash(uses, uses_marks) if lang == "cpp" else "",
                 needs=", ".join(pathlib.Path(n).stem for n in needs),
+                uses_needs=", ".join(pathlib.Path(n).stem for n in uses_needs),
             )
             if lang != "typ":
                 for block in (code, uses):

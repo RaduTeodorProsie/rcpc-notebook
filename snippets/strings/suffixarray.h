@@ -6,7 +6,6 @@
  * Time: $O(n log n)$
  */
 #pragma once
-#include "../data-structures/sparsetable.h"
 vi suffixArray(string s) {
   s += '\0';
   int n = sz(s);
@@ -68,6 +67,7 @@ pii commonSubstring(const string& s, const string& t) {
   }
   return best;
 }
+#include "data-structures/sparsetable.h"
 struct SuffixLCP { // LCP of suffixes i and j in O(1)
   int n;
   vi sa, rk;

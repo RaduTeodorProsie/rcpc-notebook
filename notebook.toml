@@ -23,9 +23,10 @@ max_cols = 60         # build.py warns about code lines wider than this
 [[chapter]]
 name = "Contest"
 dir = "contest"
-files = ["template.cpp", "hash.sh", "stresstutorial.typ", "stress.sh", "gen_array.py",
-         "gen_queries.py", "gen_string.py", "gen_tree.py", "gen_graph.py",
-         "speedup.cpp", "vimrc.vim", "troubleshoot.typ"]
+files = ["setup.typ", "vimrc.vim", "bashrc.sh", "template.cpp", "hash.sh",
+         "stresstutorial.typ", "stress.sh", "gen_array.py", "gen_queries.py",
+         "gen_string.py", "gen_tree.py", "gen_graph.py", "speedup.cpp",
+         "troubleshoot.typ"]
 
 [[chapter]]
 name = "Mathematics"
