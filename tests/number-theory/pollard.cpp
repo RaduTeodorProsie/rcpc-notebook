@@ -1,6 +1,7 @@
 #include "number-theory/pollard.h"
 #include "testlib.h"
 int main() {
+  CHECK(factor(0).empty() && factor(1).empty());
   auto test = [](ull n) {
     auto f = factor(n);
     ull prod = 1;

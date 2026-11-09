@@ -1,6 +1,7 @@
 /**
  * Name: Matrix power
- * Description: `mpow(A, e)` is $A^e$ modulo `MOD`; entries must be
+ * Description: `mpow(A, e)` is $A^e$ modulo `MOD` (drop its line if
+ *   `modint.h` is in); entries must be
  *   reduced mod `MOD` (write $-c$ as `MOD` $- c$). Linear recurrence
  *   $a_n = c_1 a_(n-1) + dots + c_k a_(n-k)$: the state
  *   $(a_(n-1), dots, a_(n-k))$ times the companion matrix (first row

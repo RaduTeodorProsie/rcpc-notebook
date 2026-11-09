@@ -1,6 +1,11 @@
 #include "data-structures/lazy.h"
 #include "testlib.h"
 int main() {
+  {
+    Lazy e(vector<Lazy::T>{});  // n = 0
+    e.update(0, 0, 1);
+    e.query(0, 0);
+  }
   rep(it, 0, 300) {
     int n = rnd(1, 70);
     vector<ll> a = rvec(n, -50, 50);

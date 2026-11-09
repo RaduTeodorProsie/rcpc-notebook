@@ -3,7 +3,8 @@
  * Description: `go(solve)` calls `solve(c)` for every centroid, top-down.
  *   Inside, vertices with `removed` set belong to earlier levels,
  *   so a DFS from `c` that avoids them sees exactly the current
- *   component. `cpar` is the centroid tree.
+ *   component. `cpar` is the centroid tree. `go()` starts at vertex $0$;
+ *   forest: `go(solve, v)` for each `v` not yet `removed`.
  * Time: $O(n log n)$ plus the work in `solve`
  */
 #pragma once

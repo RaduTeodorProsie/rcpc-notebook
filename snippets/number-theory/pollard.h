@@ -1,6 +1,7 @@
 /**
  * Name: Pollard rho
- * Description: Prime factors of $n$, sorted, with repeats.
+ * Description: Prime factors of $n$, sorted, with repeats
+ *   (none for $n < 2$).
  * Time: $O(n^(1\/4))$ expected
  */
 #pragma once
@@ -22,7 +23,7 @@ ull rho(ull n) {
   return __gcd(prd, n);
 }
 void factorRec(ull n, vector<ull>& out) {
-  if (n == 1) return;
+  if (n < 2) return;
   if (isPrime(n)) return out.push_back(n);
   ull d = rho(n);
   factorRec(d, out), factorRec(n / d, out);

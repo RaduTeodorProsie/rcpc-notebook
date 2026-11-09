@@ -2,7 +2,7 @@
  * Name: Polygon area and containment
  * Description: `area2` is twice the signed area, positive for
  *   counter-clockwise order. `inside` returns $1$ strictly
- *   inside, $0$ on the boundary, $-1$ outside. Exact on `ll`.
+ *   inside, $0$ on the boundary, $-1$ outside (not a bool). Exact on `ll`.
  * Time: $O(n)$
  */
 #pragma once

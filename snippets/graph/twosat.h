@@ -1,7 +1,7 @@
 /**
  * Name: 2-SAT
  * Description: Variables $0..n-1$; a literal is `x` or `~x`
- *   (negation). Constraints: `either(a, b)` ($a or b$),
+ *   (negation; not `-x`, as $-0 = 0$). Constraints: `either(a, b)` ($a or b$),
  *   `implies`, `force(a)` ($a$ true), `same` ($a = b$), `differ`
  *   ($a != b$, xor), `atMostOne(lits)`. Not 2-SAT: "at least one
  *   of 3+ literals". `solve` fills `val` with a satisfying

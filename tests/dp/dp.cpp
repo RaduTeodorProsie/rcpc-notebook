@@ -21,6 +21,9 @@ int main() {
       dp.assign(n + 1, INF);
       dc(1, n + 1, 0, n, C, prev, dp);
       rep(i, 1, n + 1) CHECK(dp[i] == B[j][i], "j=%d i=%d", j, i);
+      vector<ll> dp2(n + 1, INF);  // a lambda passed directly
+      dc(1, n + 1, 0, n, [&](int k, int i) { return C(k, i); }, prev, dp2);
+      CHECK(dp2 == dp);
       prev = dp;
       prev[0] = INF;
     }

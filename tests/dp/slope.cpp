@@ -43,11 +43,42 @@ int main() {
     // compare away from the borders, where shifts made the brute force inexact
     ll mn = LLONG_MAX;
     rep(x, -20, 21) {
-      Slope c = s;
-      CHECK(c.eval(x) == at(x), "it=%d x=%d got %lld want %lld", it, x, Slope(s).eval(x), at(x));
+      CHECK(s.eval(x) == at(x), "it=%d x=%d got %lld want %lld", it, x, s.eval(x), at(x));
       mn = min(mn, at(x));
     }
     CHECK(s.mn == mn || s.topL() < -20 || s.topR() > 20);
+  }
+  // merge: f + g, checked against eval (itself checked above)
+  rep(it, 0, 3000) {
+    auto make = [&] {
+      Slope s;
+      int ops = rnd(0, 10);
+      rep(o, 0, ops) {
+        int ty = rnd(0, 6);
+        ll a = rnd(-8, 8);
+        if (ty == 0) s.addConst(a);
+        if (ty == 1) s.addRight(a);
+        if (ty == 2) s.addLeft(a);
+        if (ty == 3) s.addAbs(a);
+        if (ty == 4) s.prefixMin();
+        if (ty == 5) s.suffixMin();
+        if (ty == 6) s.shift(a);
+      }
+      return s;
+    };
+    Slope f = make(), g = make(), h = f;
+    Slope g2 = g;
+    h.merge(g2);
+    CHECK(g2.L.empty() && g2.R.empty());
+    ll mn = LLONG_MAX;
+    rep(x, -120, 121) {
+      ll want = f.eval(x) + g.eval(x);
+      CHECK(h.eval(x) == want, "it=%d x=%d got %lld want %lld", it, x, h.eval(x), want);
+      mn = min(mn, want);
+    }
+    CHECK(h.mn == mn, "it=%d mn %lld want %lld", it, h.mn, mn);
+    h.addAbs(rnd(-8, 8));  // still a valid structure after merging
+    CHECK(h.topL() <= h.topR());
   }
   // the classic example: make a non-decreasing
   rep(it, 0, 500) {

@@ -26,7 +26,7 @@ struct Lazy {
   vector<U> lz;
   Lazy(const vector<T>& v)
       : n(sz(v)), t(4 * n), lz(4 * n, none) {
-    build(1, 0, n, v);
+    if (n) build(1, 0, n, v);
   }
   void build(int x, int l, int r, const vector<T>& v) {
     if (r - l == 1) return void(t[x] = v[l]);

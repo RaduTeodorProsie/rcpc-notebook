@@ -9,7 +9,7 @@
  */
 #pragma once
 template <class F>
-void dc(int lo, int hi, int klo, int khi, F& C,
+void dc(int lo, int hi, int klo, int khi, const F& C,
         const vector<ll>& prev, vector<ll>& dp) {
   const ll INF = 1e18;
   if (lo >= hi) return;

@@ -4,7 +4,7 @@
  *   convolution of the inclusion–exclusion formula; all unsigned
  *   $c(n, k)$ as the coefficients of $product_(i=l)^(r-1) (x + i)$
  *   with $l = 0, r = n$; and $B_n = sum_k S(n, k)$. All modulo the
- *   NTT prime `MOD`.
+ *   NTT prime `MOD` (drop its line if `modint.h` is in).
  * Time: $O(n log n)$; $O(n log^2 n)$
  */
 #pragma once

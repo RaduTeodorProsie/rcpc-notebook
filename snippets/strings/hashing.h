@@ -2,7 +2,8 @@
  * Name: String hashing
  * Description: *Needs `__int128`* (the product in `mul`).
  *   Polynomial hash modulo $2^61 - 1$. Pick the base
- *   at random, e.g. `rng() % (M - 256) + 256`.
+ *   at random, e.g. `rng() % (M - 256) + 256` with
+ *   `mt19937_64 rng(time(0))` (or Pollard's `rng`).
  * Time: $O(n)$ build, $O(1)$ query of $[l, r)$
  */
 #pragma once

@@ -4,7 +4,7 @@
  *   which every vertex except the root $r$ has exactly one
  *   incoming edge and all of them are reachable from $r$. Returns
  *   (cost, `par`) with `par[r]` $= -1$, or $(-1, {})$ if some vertex
- *   is unreachable. Chu–Liu/Edmonds: every vertex takes its
+ *   is unreachable (test `par.empty()`: $-1$ can be a real cost). Chu–Liu/Edmonds: every vertex takes its
  *   cheapest incoming edge. If that makes a cycle, contract the
  *   cycle into one vertex; an edge entering the cycle at $v$ then
  *   costs $w - w_"in"(v)$, since taking it means dropping $v$'s
