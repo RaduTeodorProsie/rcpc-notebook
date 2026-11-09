@@ -42,8 +42,8 @@ struct Slope {
   void prefixMin() { R = {}; } // f(x) = min over y <= x
   void suffixMin() { L = {}; } // f(x) = min over y >= x
   void shift(ll a) { addL += a, addR += a; } // f(x - a)
-  // f(x) = min of f(y) over x - b <= y <= x - a  (a <= b)
-  void window(ll a, ll b) { addL += a, addR += b; }
+  // x_old in [x_new - a, x_new + b]  (a + b >= 0)
+  void window(ll a, ll b) { addL -= b, addR += a; }
   ll eval(ll x) { // copies the heaps: O(n log n)
     ll r = mn;
     for (auto h = L; sz(h); h.pop())

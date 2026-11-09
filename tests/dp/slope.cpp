@@ -16,7 +16,16 @@ int main() {
     }
     rep(o, 0, ops) {
       int ty = rnd(0, 7);
-      ll a = rnd(-8, 8), b = a + rnd(0, 4);
+      ll a = rnd(-8, 8), b = 0;
+      if (ty == 7) {  // window bounds, a + b >= 0
+        int m = rnd(0, 2);
+        if (m == 0) a = b = rnd(0, 4);              // symmetric
+        if (m == 1) a = rnd(0, 5), b = rnd(0, 5);   // asymmetric
+        if (m == 2) {                               // one-way: one bound negative
+          a = rnd(1, 6), b = -rnd(1, a);
+          if (rnd(0, 1)) swap(a, b);
+        }
+      }
       vector<ll> g = f;
       rep(x, -X, X + 1) {
         ll& v = g[x + X];
@@ -27,7 +36,7 @@ int main() {
         if (ty == 4) { v = INF; rep(y, -X, x + 1) v = min(v, at(y)); }
         if (ty == 5) { v = INF; rep(y, x, X + 1) v = min(v, at(y)); }
         if (ty == 6) v = (x - a >= -X && x - a <= X) ? at(x - a) : INF;
-        if (ty == 7) { v = INF; rep(y, x - b, x - a + 1) if (y >= -X && y <= X) v = min(v, at(y)); }
+        if (ty == 7) { v = INF; rep(y, x - a, x + b + 1) if (y >= -X && y <= X) v = min(v, at(y)); }
       }
       if (ty == 0) s.addConst(a);
       if (ty == 1) s.addRight(a);
