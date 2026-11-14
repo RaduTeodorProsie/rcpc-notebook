@@ -17,4 +17,16 @@ int main() {
     rep(i, 0, r) c = c * a % m;
     CHECK(c == b);
   }
+  // large moduli: every product needs more than 64 bits
+  rep(it, 0, 8) {
+    ll m = rnd(4e9, 2e12), a = rnd(2, m - 1), x = rnd(0, 3e6);
+    auto pw = [&](ll e) {
+      ll r = 1 % m, c = a;
+      for (; e; e >>= 1, c = ll((__int128)c * c % m))
+        if (e & 1) r = ll((__int128)r * c % m);
+      return r;
+    };
+    ll b = pw(x), r = dlog(a, b, m);
+    CHECK(r >= 0 && r <= x && pw(r) == b, "a=%lld m=%lld x=%lld got %lld", a, m, x, r);
+  }
 }

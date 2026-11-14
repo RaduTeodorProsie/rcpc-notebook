@@ -16,6 +16,9 @@
   - Off-by-one, `<` vs `<=`, 0/1-indexing.
   - Equal elements, ties, special cases.
   - Precision: compare with eps, avoid `==`.
+  - Mixed up `n` and `m`, `i` and `j`?
+  - Many tests: whole test read before an early exit?
+  - Explain the code to a teammate; rewrite it.
 ], [
   #hd[Runtime error]
   - Index out of range: compile with `-fsanitize`.
@@ -35,4 +38,5 @@
   - `endl` flushes: use `'\n'`. Copying big vectors.
   - `map` → sorted vector or `unordered_map`.
   - Recursion → iteration. Precompute more.
+  - Interactive: flush after every line.
 ])

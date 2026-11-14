@@ -31,7 +31,7 @@ files = ["setup.typ", "vimrc.vim", "bashrc.sh", "template.cpp", "hash.sh",
 [[chapter]]
 name = "Mathematics"
 dir = "math"
-files = ["sums.typ", "combinatorics.typ", "formulas.typ", "probability.typ", "theorems.typ", "numbers.typ"]
+files = ["sums.typ", "combinatorics.typ", "fastcomb.typ", "formulas.typ", "probability.typ", "theorems.typ", "theorems2.typ", "numbers.typ"]
 
 [[chapter]]
 name = "Number theory and algebra"
@@ -54,7 +54,7 @@ files = ["ternary.h", "simpson.h", "fracsearch.h", "simplex.h"]
 name = "Data structures"
 dir = "data-structures"
 files = ["dsu.h", "rollback.h", "dyncon.h", "fenwick.h", "fenwick2d.h", "segtree.h", "lazy.h",
-         "+lazyvar.frag", "beats.h", "kst.h", "pst.h", "treap.h", "sparsetable.h", "lichao.h", "cht.h", "staircase.h", "pbds.h",
+         "+lazyvar.frag", "pst.h", "beats.h", "kst.h", "treap.h", "sparsetable.h", "lichao.h", "cht.h", "staircase.h", "pbds.h",
          "mo.frag"]
 
 [[chapter]]
@@ -62,7 +62,7 @@ name = "Graphs"
 dir = "graph"
 files = ["spfa.h", "dinic.h", "mcmf.h", "mincirc.h", "hopcroft.h", "hungarian.h", "blossom.h", "scc.h",
          "twosat.h", "lowlink.h", "euler.h", "lca.h", "hld.h", "hldorder.h", "virtualtree.h",
-         "centroid.h", "linkcut.h", "dominator.h", "dmst.h", "mincut.h",
+         "centroid.h", "treeiso.h", "linkcut.h", "dominator.h", "dmst.h", "mincut.h",
          "maxclique.h", "edgecolor.h"]
 
 [[chapter]]
@@ -74,9 +74,9 @@ files = ["kmp.h", "zfunc.h", "manacher.h", "hashing.h", "suffixarray.h", "sam.h"
 [[chapter]]
 name = "Geometry"
 dir = "geometry"
-files = ["point.h", "lines.h", "angle.h", "polygon.h", "polycut.h", "hull.h",
+files = ["point.h", "lines.h", "angle.h", "polygon.h", "hull.h",
          "closest.h", "halfplane.h", "circles.h", "tangents.h", "polycircle.h",
-         "minkowski.h", "manhattanmst.h", "point3.h", "hull3.h"]
+         "minkowski.h", "manhattanmst.h", "polycut.h", "point3.h", "hull3.h"]
 
 [[chapter]]
 name = "Dynamic programming"

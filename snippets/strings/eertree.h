@@ -13,7 +13,7 @@
 struct Eertree {
   string s;
   vi len{-1, 0}, link{0, 0}, occ{0, 0};
-  vector<array<int, 26>> nx{{}, {}};
+  vector<array<int, 26>> nx{{}, {}}; //!
   int last = 1;
   int up(int v, int i) {
     while (i - 1 - len[v] < 0 || s[i - 1 - len[v]] != s[i])
@@ -22,7 +22,7 @@ struct Eertree {
   }
   void add(char ch) {
     s += ch;
-    int i = sz(s) - 1, c = ch - 'a', p = up(last, i);
+    int i = sz(s) - 1, c = ch - 'a', p = up(last, i); //!
     if (!nx[p][c]) {
       int q = up(link[p], i);
       len.push_back(len[p] + 2);

@@ -10,7 +10,7 @@
  *   $O(k)$ clauses (pairwise would be $O(k^2)$): a new variable
  *   $p_i$ means "one of $l_0..l_i$ is true", with $l_i => p_i$,
  *   $p_(i-1) => p_i$ and $p_(i-1) => not l_i$ (once one is true,
- *   all later ones are false). Exactly one of 3+: not 2-SAT.
+ *   all later ones are false).
  * Time: $O(n + m)$
  * Usage: TwoSat s(n); s.either(a, ~b); s.solve(val);
  */

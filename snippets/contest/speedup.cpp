@@ -1,7 +1,8 @@
 /**
  * Name: Speedups
  * Description: Pragmas go above all includes. Drop `avx2` if the
- *   judge rejects it. `readInt` is several times faster than `cin`.
+ *   judge rejects it. `readInt` is several times faster than
+ *   `cin`; at the end of the input it returns $0$.
  */
 #pragma GCC optimize("O3,unroll-loops")
 #pragma GCC target("avx2,bmi,bmi2,popcnt,lzcnt")
@@ -15,7 +16,8 @@ int gc() {
 }
 ll readInt() {
   int c = gc();
-  while (c != '-' && (c < '0' || c > '9')) c = gc();
+  while (c >= 0 && c != '-' && (c < '0' || c > '9'))
+    c = gc();
   bool neg = c == '-';
   if (neg) c = gc();
   ll x = 0;

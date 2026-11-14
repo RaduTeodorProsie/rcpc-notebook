@@ -9,13 +9,13 @@
  */
 #pragma once
 struct Aho {
-  vector<array<int, 26>> nx;
+  vector<array<int, 26>> nx; //!
   vi link, cnt, ord;
   Aho() : nx(1), link(1), cnt(1) { nx[0].fill(-1); }
   int add(const string& s) { // returns the end state
     int v = 0;
     for (char ch : s) {
-      int c = ch - 'a';
+      int c = ch - 'a'; //!
       if (nx[v][c] < 0) {
         nx[v][c] = sz(nx);
         nx.emplace_back().fill(-1);
@@ -35,7 +35,7 @@ struct Aho {
       int v = q.front();
       q.pop(), ord.push_back(v);
       cnt[v] += cnt[link[v]];
-      rep(c, 0, 26) {
+      rep(c, 0, 26) { //!
         int& u = nx[v][c];
         if (u < 0) u = nx[link[v]][c];
         else link[u] = nx[link[v]][c], q.push(u);

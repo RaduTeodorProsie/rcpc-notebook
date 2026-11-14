@@ -17,7 +17,7 @@
  */
 #pragma once
 using Mat = vector<vector<ll>>;
-const ll MOD = 1000000007; //!
+const int MOD = 1000000007; //!
 Mat mul(const Mat& a, const Mat& b) {
   int n = sz(a), k = sz(b), m = sz(b[0]);
   Mat c(n, vector<ll>(m));

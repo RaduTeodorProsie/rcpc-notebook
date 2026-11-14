@@ -1,6 +1,6 @@
 /**
  * Name: Template
- * Usage: g++ -std=c++20 -g -Wall -fsanitize=address,undefined
+ * Usage: cs sol.cpp && ./sol < in   # cs: see Bashrc
  */
 #include <bits/stdc++.h>
 using namespace std;

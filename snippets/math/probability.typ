@@ -4,6 +4,7 @@
   columns: (auto, 1fr), stroke: none, inset: (x: 2pt, y: 1.8pt),
   sec[Expectation],
   [Basics], [$E[X] = sum_(k>=1) P(X >= k)$ for $X in NN$. Linearity holds for dependent variables too. $"Var" X = E[X^2] - E[X]^2$; for independent $X, Y$: $"Var"(X + Y) = "Var" X + "Var" Y$, $E[X Y] = E[X] E[Y]$],
+  [Min–max], [$max(S) = sum_(emptyset != T subset.eq S) (-1)^(|T|+1) min(T)$, and the same with $E$ on both sides: the time until all of $S$ have happened, from the times until the first of $T$],
   [Coupons], [drawing until all $n$ kinds are seen: $n H_n approx n ln n$ draws],
   sec[Distributions (mean, variance)],
   [Binomial], [successes in $n$ independent tries of probability $p$: $P(k) = binom(n, k) p^k (1-p)^(n-k)$; $n p$, $n p (1-p)$],
